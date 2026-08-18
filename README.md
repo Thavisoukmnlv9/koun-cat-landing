@@ -151,6 +151,35 @@ after replacing a photograph, use `sharp` (installed temporarily, then removed);
 macOS `sips` writes AVIF files whose pixel data decodes as fully transparent and
 cannot be used.
 
+### Sound
+
+Three recordings, all served straight out of `public/`: the reel's own audio,
+the optical track beside it, and `sound-effects/` — the keys the letter is
+typed with.
+
+The reel and the track are objects you switch on. The letter's typing is not:
+it starts with the tap that breaks the seal and stops when the letter is put
+back, and there is a mute control inside the letter for the rest of the time.
+That is a deliberate departure from the reel's "runs silent unless you ask it
+not to", and the reason is that the sound _is_ the animation there — it is not
+accompanying the letter, it is the letter being written.
+
+`use-typing-sound.ts` holds two decisions worth knowing before changing it:
+
+- **`play()` is called from the click handler, not from an effect.** WebKit only
+  grants an element the right to make a sound if `play()` happened inside a user
+  gesture, and it pauses a muted element that started without one the instant
+  script unmutes it. The letter opens about a second after the tap, in a
+  different task — so the element is started, silently, from the tap itself and
+  simply rolls until the letter is closed. Move that call into an effect and the
+  page goes quiet on iPhone with nothing in the console to say why.
+- **The gate is `muted`, not `pause()`.** It is synchronous, so it cannot clip
+  the first click of a burst the way resuming a decode can; rapid play/pause
+  pairs produce _"The play() request was interrupted"_ noise; letting the tape
+  run underneath means each burst resumes somewhere else in the recording, so a
+  long letter never repeats the same clatter; and on iOS Safari `muted` is the
+  only volume control that works at all, since `volume` is read-only there.
+
 ## Deployment
 
 The build output in `dist/` is static and can be served by anything. A container
@@ -178,6 +207,15 @@ private photographs in it, so staying out of search indexes is the safe default
   Lao counterparts. `cards.c03.back` (what the flowers were for) is still the
   original's placeholder for the same reason: inventing it was not this port's
   job.
+- **The typing sound plays at full level on iPhone.**
+  `HTMLMediaElement.volume` is read-only on iOS Safari, so the `LEVEL` constant
+  in `use-typing-sound.ts` is ignored there and the recording plays at whatever
+  level it was mastered at. The mute control inside the letter does work, and is
+  the remedy. The proper fix is to re-encode
+  `public/sound-effects/virtualzero-keyboard-typing-fast-371229.mp3` about 8 dB
+  quieter — which fixes every platform at once and needs no code. It is 256 kbps
+  stereo at 257 KB; mono at 96 kbps would be a third of that with no audible
+  difference.
 - **Reading the letter aloud is English-only in practice.** The control is
   rendered only where the device actually has a voice for the active language
   (`use-letter-speech.ts`), and no mainstream platform ships a `lo-LA` voice —

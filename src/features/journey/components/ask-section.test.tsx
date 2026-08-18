@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderWithProviders, screen, waitFor } from '@/test/utils'
 
@@ -27,11 +27,23 @@ function preferReducedMotion(reduce: boolean) {
   })) as unknown as typeof window.matchMedia
 }
 
+// jsdom's `paused` never moves — see the note in `src/test/setup.ts` — so the
+// calls themselves are what the sound assertions read.
+let play: ReturnType<typeof vi.spyOn>
+let pause: ReturnType<typeof vi.spyOn>
+
+beforeEach(() => {
+  play = vi.spyOn(HTMLMediaElement.prototype, 'play')
+  pause = vi.spyOn(HTMLMediaElement.prototype, 'pause')
+})
+
 afterEach(() => {
   window.matchMedia = realMatchMedia
+  vi.restoreAllMocks()
 })
 
 const hint = () => screen.getByRole('button', { name: 'Open the letter' })
+const tape = (container: HTMLElement) => container.querySelector('audio') as HTMLAudioElement
 
 describe('AskSection', () => {
   it('stays sealed until the hint is pressed', () => {
@@ -75,7 +87,9 @@ describe('AskSection', () => {
 
     const trigger = hint()
     await user.click(trigger)
-    await waitFor(() => expect(screen.getByRole('dialog').contains(document.activeElement)).toBe(true))
+    await waitFor(() =>
+      expect(screen.getByRole('dialog').contains(document.activeElement)).toBe(true),
+    )
 
     await user.keyboard('{Escape}')
 
@@ -128,5 +142,54 @@ describe('AskSection', () => {
     const typed = dialog.querySelector('[data-typed]')
     expect(typed).toHaveAttribute('aria-hidden')
     expect(screen.getByRole('button', { name: 'Show the whole letter now' })).toBeInTheDocument()
+  })
+
+  it('costs a visitor who never opens the letter nothing at all', () => {
+    const { container } = renderWithProviders(<AskSection />)
+
+    // `preload="none"` and no play(): not a byte of the recording is fetched
+    // for someone who only scrolls past.
+    expect(tape(container)).toHaveAttribute('preload', 'none')
+    expect(play).not.toHaveBeenCalled()
+  })
+
+  it('starts the sound from the tap itself, where the gesture is', async () => {
+    // Deliberately *not* under reduced motion, and deliberately not waiting for
+    // anything: the whole point is that play() happens inside the click handler
+    // rather than in an effect a second later, because on WebKit that is the
+    // difference between a letter that can be heard and one that cannot.
+    const user = userEvent.setup()
+    renderWithProviders(<AskSection />)
+
+    await user.click(hint())
+
+    expect(play).toHaveBeenCalled()
+  })
+
+  it('silences the typing the moment the letter is put back', async () => {
+    preferReducedMotion(true)
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<AskSection />)
+
+    await user.click(hint())
+    tape(container).currentTime = 3
+    pause.mockClear()
+
+    await user.click(screen.getByRole('button', { name: 'Close the letter' }))
+
+    expect(pause).toHaveBeenCalled()
+    expect(tape(container).currentTime).toBe(0)
+  })
+
+  it('offers nothing to silence when there is nothing to hear', async () => {
+    // Reduced motion completes the letter on its first paint, so there are no
+    // keystrokes to accompany. A control that does nothing is worse than none.
+    preferReducedMotion(true)
+    const user = userEvent.setup()
+    renderWithProviders(<AskSection />)
+
+    await user.click(hint())
+
+    expect(screen.queryByRole('button', { name: 'Silence the typing' })).not.toBeInTheDocument()
   })
 })
