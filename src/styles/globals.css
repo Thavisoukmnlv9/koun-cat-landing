@@ -519,6 +519,17 @@
      data/postcards.ts; they arrive here as custom properties, since Tailwind
      scans source text and cannot compile a runtime value into a class.
 
+     The strip's length is a percentage and its height is not, which looks
+     inconsistent and is not: washi comes off a roll of fixed width, and you
+     tear off however much you need. So the height is a real measurement that
+     should stay 26px on any screen, while the length is a fraction of the card
+     it is holding — a 92px strip was 21% of a desktop card and 33% of a phone
+     one, which is why the tape used to look like packing tape at 320px.
+
+     The centring trick keeps working through the change: a margin percentage
+     resolves against the containing block's width, exactly as the width
+     percentage does, so half of one is still half of the other.
+
      `backface-visibility: hidden` is not decoration — without it the strips
      bleed through the card while it turns over. */
   .washi {
@@ -585,6 +596,34 @@
     .card-fade {
       transition: opacity 1s ease;
     }
+  }
+
+  /* The card's lean and rise. Motion writes `--card-rot` and `--card-y` and
+     stops there; the transform is composed here so that `--tilt-scale` can cut
+     the lean down on a narrow screen, which a number living in JS cannot do
+     without a resize listener and a re-render of every card on the page.
+
+     This is the `card-fade` split read in the other direction. There the rule
+     was that CSS must not write a transform Motion is animating; here CSS is
+     the only writer of this element's transform and Motion never touches it,
+     which satisfies the same rule by the opposite route. What must not happen
+     is a third party — a Tailwind `rotate-*` or `translate-*` utility on this
+     element — joining in. */
+  .card-tilt {
+    transform: translateY(var(--card-y, 0px)) rotate(calc(var(--card-rot, 0deg) * var(--tilt-scale)));
+  }
+
+  /* The paper still lying over a print that has not finished arriving.
+     Heavier at the top edge, because that is the edge coming out of the tray
+     last, and it keeps the wash from reading as a flat grey scrim. Opacity is
+     Motion's; everything else is fixed. */
+  .photo-wash {
+    background-image: linear-gradient(
+      to bottom,
+      var(--color-paper-card),
+      var(--color-paper-card-deep) 55%,
+      var(--color-photo-bed)
+    );
   }
 
   /* ─── Postcard flip ───────────────────────────────────────────────────── */
@@ -922,9 +961,14 @@
      is what stops a touch drag scrolling the page and cancelling the gesture. */
   .seek-input {
     position: absolute;
-    inset: 0;
+    top: 50%;
+    left: 0;
     width: 100%;
-    height: 100%;
+    /* The strip is as thin as it looks good at; a thumb is not. The control
+       keeps the strip's height on a desktop-sized track and grows to 44px when
+       the track is thinner than that, centred so the strip stays put. */
+    height: max(100%, 44px);
+    transform: translateY(-50%);
     margin: 0;
     appearance: none;
     background: transparent;

@@ -15,6 +15,12 @@ import { Picture } from './picture'
  *
  * Only the right leaf turns, which is why the animation class arrives as a prop
  * from the book rather than being decided here.
+ *
+ * Below 640px the left leaf is not here at all — the photograph takes the whole
+ * board and the words it was carrying are printed on a slip below the book, by
+ * `AlbumLeafNote`, from these same keys. Two leaves side by side inside a phone
+ * screen is not a small version of a spread, it is a spread with the text
+ * falling out of it.
  */
 export function AlbumPlate({
   plate,
@@ -27,7 +33,7 @@ export function AlbumPlate({
 
   return (
     <>
-      <div className="leaf-left shadow-leaf-left absolute top-2 bottom-2 left-2 flex w-[calc(50%-12px)] flex-col justify-center gap-3 p-[clamp(18px,2.8vw,34px)]">
+      <div className="leaf-left shadow-leaf-left absolute top-2 bottom-2 left-2 hidden w-[calc(50%-12px)] flex-col justify-center gap-3 p-[clamp(18px,2.8vw,34px)] sm:flex">
         <p className="font-label text-label-sm tracking-label text-muted-label whitespace-nowrap uppercase">
           {t(plate.keys.label)}
         </p>
@@ -39,7 +45,7 @@ export function AlbumPlate({
 
       <div
         className={cn(
-          'leaf-right shadow-leaf-right absolute top-2 right-2 bottom-2 flex w-[calc(50%-12px)] origin-left flex-col gap-2.5 p-[clamp(14px,2.1vw,24px)]',
+          'leaf-right shadow-leaf-right absolute inset-2 flex origin-left flex-col gap-2.5 p-[clamp(14px,2.1vw,24px)] sm:left-auto sm:w-[calc(50%-12px)]',
           leafClassName,
         )}
       >

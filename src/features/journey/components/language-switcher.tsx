@@ -37,8 +37,8 @@ export function LanguageSwitcher({ className }: { className?: string }) {
               aria-label={t('language.switchTo', { language: language.label })}
               onClick={() => void i18n.changeLanguage(language.code)}
               className={cn(
-                'font-label text-label-sm tracking-label cursor-pointer px-2.5 py-1.5 uppercase transition-colors duration-200',
-                isActive ? 'text-accent' : 'text-muted-label hover:text-ink',
+                'font-label text-label-sm tracking-label -my-2 cursor-pointer px-3 py-3.5 uppercase transition-colors duration-200',
+                isActive ? 'text-accent' : 'text-muted-label hover:text-ink active:text-ink',
               )}
             >
               {language.label}

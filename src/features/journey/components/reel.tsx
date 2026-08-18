@@ -93,7 +93,7 @@ export function Reel({ src, className }: { src: string; className?: string }) {
           type="button"
           aria-label={t(muted ? 'a11y.unmuteReel' : 'a11y.muteReel')}
           onClick={toggleMuted}
-          className="font-label text-label-sm tracking-label text-muted-label border-rule cursor-pointer border px-4 py-2.5 whitespace-nowrap uppercase"
+          className="font-label text-label-sm tracking-label text-muted-label border-rule cursor-pointer border px-4 py-3.5 whitespace-nowrap uppercase"
         >
           {t(muted ? 'reel.soundOn' : 'reel.soundOff')}
         </button>
@@ -110,7 +110,7 @@ export function Reel({ src, className }: { src: string; className?: string }) {
           type="button"
           aria-label={t(playing ? 'a11y.stopReel' : 'a11y.runReel')}
           onClick={toggle}
-          className="font-label text-label-sm tracking-label text-paper-card bg-accent border-accent cursor-pointer border px-4 py-2.5 whitespace-nowrap uppercase"
+          className="font-label text-label-sm tracking-label text-paper-card bg-accent border-accent cursor-pointer border px-4 py-3.5 whitespace-nowrap uppercase"
         >
           {t(playing ? 'reel.stop' : 'reel.run')}
         </button>

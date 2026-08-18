@@ -38,6 +38,15 @@ const PRINT_SCALE_REST = 1.02
 const PRINT_DRIFT = -5
 /** How much paper is left lying over the print the moment it enters. */
 const PRINT_WASH = 0.5
+/**
+ * Where the print has finished fixing, as a fraction of the card's travel.
+ *
+ * Short of 1 on purpose. The card is still settling for the last stretch, and
+ * the last stretch is the part a reader is actually looking at — so the print
+ * comes up first and the card finishes moving on a clean photograph, rather
+ * than the two landing together and the whole thing arriving at once.
+ */
+const PRINT_FIXED_AT = 0.85
 
 export interface ScrollTiltOptions {
   /** Degrees the card enters at. */
@@ -140,7 +149,7 @@ export function useScrollTilt<T extends HTMLElement = HTMLElement>({
   const y = useMotionTemplate`${lift}px`
   const photoY = useMotionTemplate`${drift}%`
   const photoScale = useTransform(scrollYProgress, [0, 1], [PRINT_SCALE, PRINT_SCALE_REST])
-  const wash = useTransform(scrollYProgress, [0, 1], [PRINT_WASH, 0])
+  const wash = useTransform(scrollYProgress, [0, PRINT_FIXED_AT], [PRINT_WASH, 0])
 
   if (reduced) {
     return {

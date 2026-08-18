@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { useId, useState } from 'react'
+import { useId, useState, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/lib/utils'
@@ -15,18 +15,29 @@ import { WashiTape } from './washi-tape'
  * One postcard: a photograph and a caption on the front, a handwritten note on
  * the back, turning over on click.
  *
- * Two things here differ deliberately from the original page.
+ * Three things here differ deliberately from the original page.
  *
  * The flip control is a real `<button>` — the "tap to read the back" line,
  * which was only ever styled text over a click handler bound to the whole card.
  * The card itself keeps its click handler as a pointer affordance, which is
  * fine now that a labelled, focusable control exists; what is not fine is a
  * card that a keyboard cannot open at all. The whole card is not the button
- * because its accessible name would then be every word printed on it.
+ * because its accessible name would then be every word printed on it. Its
+ * padding is paid back with a matching negative margin: the line sits exactly
+ * where it always did and the box around it is now large enough for a thumb,
+ * which at 10px of Courier it very much was not.
  *
  * The card settles as it scrolls rather than on a one-shot transition — see
  * `useScrollTilt` for why it does not use `.reveal` like everything else — and
  * it declares the photograph it is holding so the cursor can carry it.
+ *
+ * And the photograph is a print in a window rather than a picture on a card.
+ * It is held oversize inside a clipped frame, drifts upward as the card
+ * travels, and loses a wash of paper laid over it — so a card on its way in is
+ * still developing and a card you are reading has fixed. The three layers are
+ * separate elements on purpose: the frame is a plain box, the print is the only
+ * writer of its own transform, and the wash writes nothing but opacity. Nothing
+ * new lands on `.flip-card` or `.card-fade`, which are already spoken for.
  *
  * And `backface-visibility` hides a face visually only. In the original, the
  * note on the back sat in the accessibility tree and could be selected with a
@@ -37,7 +48,7 @@ import { WashiTape } from './washi-tape'
 export function Postcard({ card }: { card: PostcardRecord }) {
   const { t } = useTranslation()
   const [flipped, setFlipped] = useState(false)
-  const { ref, rotate, y } = useScrollTilt<HTMLElement>({
+  const { ref, rotate, y, photoY, photoScale, wash } = useScrollTilt<HTMLElement>({
     from: card.enterTilt,
     to: card.tilt,
   })
@@ -55,9 +66,11 @@ export function Postcard({ card }: { card: PostcardRecord }) {
       data-cursor-src={`journey/${card.image}`}
       data-cursor-label={t(card.keys.date)}
       onClick={toggle}
-      style={{ rotate, y }}
+      // Custom properties rather than `rotate`/`y`, so that `.card-tilt` can
+      // scale the lean down on a narrow screen. See `useScrollTilt`.
+      style={{ '--card-rot': rotate, '--card-y': y } as CSSProperties}
       className={cn(
-        'perspective-card w-[min(88vw,430px)]',
+        'card-tilt perspective-card w-full max-w-[430px]',
         card.align === 'start' ? 'self-start' : 'self-end',
       )}
     >
@@ -76,11 +89,21 @@ export function Postcard({ card }: { card: PostcardRecord }) {
             <WashiTape key={index} tape={tape} />
           ))}
 
-          <Picture
-            name={`journey/${card.image}`}
-            alt={t(card.keys.title)}
-            className="aspect-photo bg-photo-bed w-full object-cover"
-          />
+          {/* The window the print sits in. Plain box, no transform of its own —
+              it exists to clip, so that the print has room to move. */}
+          <div className="aspect-photo bg-photo-bed relative w-full overflow-hidden">
+            <motion.div style={{ y: photoY, scale: photoScale }} className="size-full">
+              <Picture
+                name={`journey/${card.image}`}
+                alt={t(card.keys.title)}
+                className="size-full object-cover"
+              />
+            </motion.div>
+
+            <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+              <motion.div style={{ opacity: wash }} className="photo-wash size-full" />
+            </div>
+          </div>
 
           <div className="font-label text-label tracking-date text-muted-label mt-4 flex items-baseline justify-between gap-3 uppercase">
             <span>{t(card.keys.date)}</span>
@@ -104,7 +127,7 @@ export function Postcard({ card }: { card: PostcardRecord }) {
               event.stopPropagation()
               toggle()
             }}
-            className="font-label text-label-sm tracking-label text-accent hover:text-accent-strong mt-3.5 cursor-pointer uppercase"
+            className="font-label text-label-sm tracking-label text-accent hover:text-accent-strong active:text-accent-strong mt-1 -mb-2 inline-block cursor-pointer py-3 pr-4 uppercase"
           >
             {t('timeline.flipHint')}
           </button>

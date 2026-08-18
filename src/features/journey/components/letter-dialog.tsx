@@ -153,7 +153,7 @@ function LetterSheet({
                 type="button"
                 onClick={finish}
                 aria-label={t('a11y.skipTyping')}
-                className="font-label text-label-sm tracking-label text-muted-label hover:text-ink border-rule cursor-pointer border px-3 py-2 uppercase"
+                className="font-label text-label-sm tracking-label text-muted-label hover:text-ink active:text-ink border-rule cursor-pointer border px-3 py-3 uppercase"
               >
                 {t('ask.skip')}
               </button>
@@ -166,7 +166,7 @@ function LetterSheet({
                   onClick={sound.toggleSound}
                   aria-pressed={sound.soundOn}
                   aria-label={t(sound.soundOn ? 'a11y.muteTyping' : 'a11y.unmuteTyping')}
-                  className="font-label text-label-sm tracking-label text-muted-label hover:text-ink border-rule cursor-pointer border px-3 py-2 uppercase"
+                  className="font-label text-label-sm tracking-label text-muted-label hover:text-ink active:text-ink border-rule cursor-pointer border px-3 py-3 uppercase"
                 >
                   {t(sound.soundOn ? 'ask.soundOn' : 'ask.soundOff')}
                 </button>
@@ -188,7 +188,7 @@ function LetterSheet({
           type="button"
           onClick={onClose}
           aria-label={t('a11y.closeLetter')}
-          className="font-label text-label-sm tracking-label text-muted-label hover:text-ink border-rule cursor-pointer border px-3 py-2 uppercase"
+          className="font-label text-label-sm tracking-label text-muted-label hover:text-ink active:text-ink border-rule cursor-pointer border px-3 py-3 uppercase"
         >
           {t('ask.close')}
         </button>

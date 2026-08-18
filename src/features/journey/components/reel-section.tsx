@@ -33,7 +33,7 @@ export function ReelSection() {
     <section
       ref={ref}
       data-revealed={revealed || undefined}
-      className="reveal max-w-page mx-auto flex flex-col items-center gap-[22px] px-6 pt-[clamp(40px,7vw,90px)] pb-[clamp(20px,4vw,50px)]"
+      className="reveal max-w-page mx-auto flex flex-col items-center gap-[clamp(16px,4vw,22px)] px-[clamp(14px,4vw,24px)] pt-[clamp(40px,7vw,90px)] pb-[clamp(20px,4vw,50px)]"
     >
       <p className="font-label text-label tracking-section text-muted uppercase">
         {t('reel.kicker')}

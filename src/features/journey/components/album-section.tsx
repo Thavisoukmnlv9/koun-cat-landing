@@ -6,6 +6,7 @@ import { useReveal } from '../hooks/use-reveal'
 
 import { AlbumBook } from './album-book'
 import { AlbumControls } from './album-controls'
+import { AlbumLeafNote } from './album-leaf-note'
 import { PlateIndex } from './plate-index'
 import { PlateLightbox } from './plate-lightbox'
 
@@ -33,7 +34,7 @@ export function AlbumSection() {
     <section
       ref={ref}
       data-revealed={revealed || undefined}
-      className="reveal max-w-page mx-auto flex flex-col items-center gap-[22px] px-6 pt-[clamp(40px,7vw,90px)] pb-[clamp(20px,4vw,50px)]"
+      className="reveal max-w-page mx-auto flex flex-col items-center gap-[clamp(16px,4vw,22px)] px-[clamp(14px,4vw,24px)] pt-[clamp(40px,7vw,90px)] pb-[clamp(20px,4vw,50px)]"
     >
       <p className="font-label text-label tracking-section text-muted uppercase">
         {t('album.kicker')}
@@ -41,6 +42,8 @@ export function AlbumSection() {
       <h2 className="font-hand text-album text-ink-strong font-semibold">{t('album.title')}</h2>
 
       <AlbumBook page={page} direction={direction} onTurn={turn} />
+      {/* The facing page's words, on a screen that cannot hold a spread. */}
+      <AlbumLeafNote page={page} />
       <AlbumControls labels={labels} onTurn={turn} />
 
       <PlateIndex onOpen={setHeldUp} />

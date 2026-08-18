@@ -23,6 +23,15 @@ import { AlbumPlate } from './album-plate'
  * also breaks under StrictMode's double effect invocation. Here the browser
  * does it, and the only state involved is which spread is visible.
  *
+ * Below 640px the board turns portrait and shows one leaf rather than a spread.
+ * A spread does not survive a phone: two 138px columns inside a 188px-tall box
+ * pushed the left leaf's text clean out of the bottom of the board and clipped
+ * the cover title off the right edge. So the photograph takes the whole board
+ * and the remembered note moves out from under the cover, to a slip below the
+ * book — see `AlbumLeafNote`. The pager is untouched by any of it: still seven
+ * spreads, still one press per photograph, still the same turn on the same
+ * leaf. Only where the words sit changes.
+ *
  * Clicking either half of the book pages it, as in the original. Those two
  * halves are real buttons rather than a coordinate check on a div, but they are
  * `aria-hidden` and unfocusable on purpose: they duplicate the labelled pager
@@ -65,7 +74,7 @@ export function AlbumBook({
       aria-label={t('a11y.albumLabel')}
       tabIndex={0}
       onKeyDown={onKeyDown}
-      className="book-board shadow-board aspect-book perspective-book relative mt-2.5 w-[min(94vw,900px)] cursor-pointer"
+      className="book-board shadow-board perspective-book sm:aspect-book relative mt-2.5 aspect-[3/4] w-[min(94vw,900px)] cursor-pointer"
     >
       {Array.from({ length: SPREAD_COUNT }, (_, spread) => (
         <div key={spread} hidden={spread !== page} className="absolute inset-0">
@@ -80,7 +89,7 @@ export function AlbumBook({
       {/* The crease. Above both leaves, and eats no clicks. */}
       <div
         aria-hidden
-        className="book-gutter pointer-events-none absolute top-2 bottom-2 left-1/2 z-40 -ml-[7px] w-3.5"
+        className="book-gutter pointer-events-none absolute top-2 bottom-2 left-1/2 z-40 -ml-[7px] hidden w-3.5 sm:block"
       />
 
       <button

@@ -15,15 +15,26 @@
  * properties, while every colour, easing and duration stays in the theme.
  */
 
-/** One strip of washi tape holding a card to the page. */
+/**
+ * One strip of washi tape holding a card to the page.
+ *
+ * The mixed units are deliberate. Washi comes off a roll of fixed width and you
+ * tear off however much you need, so `height` is a real measurement that should
+ * be the same 26px on a phone as on a desktop, while `width` is a fraction of
+ * whatever it is holding down. They used to both be px, and a 92px strip that
+ * covered a fifth of a desktop card covered a third of a 320px one — which read
+ * less as washi than as parcel tape.
+ */
 export interface WashiTape {
   /** Which edge the strip is anchored to. `center` straddles the midline. */
   anchor: 'left' | 'right' | 'center'
-  /** px in from that edge; ignored when `anchor` is `center`. */
+  /** % of the card's width in from that edge; ignored when `anchor` is `center`. */
   offset: number
   /** px above the card's top edge — always negative, so the strip overhangs. */
   top: number
+  /** Length of the strip, as a % of the card's width. */
   width: number
+  /** The roll's width, in px. Does not scale; see the note above. */
   height: number
   /** Degrees. Small, and never the same twice; that is the whole point. */
   rotate: number
@@ -82,8 +93,8 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: -7,
     tilt: -2.1,
     tapes: [
-      { anchor: 'left', offset: 22, top: -14, width: 92, height: 26, rotate: -5, opacity: 0.68 },
-      { anchor: 'right', offset: 18, top: -12, width: 80, height: 24, rotate: 6, opacity: 0.6 },
+      { anchor: 'left', offset: 5.1, top: -14, width: 21.4, height: 26, rotate: -5, opacity: 0.68 },
+      { anchor: 'right', offset: 4.2, top: -12, width: 18.6, height: 24, rotate: 6, opacity: 0.6 },
     ],
     keys: cardKeys('c01'),
   },
@@ -95,7 +106,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: 6,
     tilt: 1.8,
     tapes: [
-      { anchor: 'center', offset: 0, top: -13, width: 92, height: 26, rotate: 2, opacity: 0.66 },
+      { anchor: 'center', offset: 0, top: -13, width: 21.4, height: 26, rotate: 2, opacity: 0.66 },
     ],
     keys: cardKeys('c02'),
   },
@@ -107,7 +118,15 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: -6,
     tilt: -1.4,
     tapes: [
-      { anchor: 'right', offset: 26, top: -13, width: 86, height: 25, rotate: -7, opacity: 0.62 },
+      {
+        anchor: 'right',
+        offset: 6.0,
+        top: -13,
+        width: 20.0,
+        height: 25,
+        rotate: -7,
+        opacity: 0.62,
+      },
     ],
     keys: cardKeys('c03'),
   },
@@ -119,7 +138,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: 7,
     tilt: 2.2,
     tapes: [
-      { anchor: 'left', offset: 24, top: -14, width: 90, height: 26, rotate: 4, opacity: 0.66 },
+      { anchor: 'left', offset: 5.6, top: -14, width: 20.9, height: 26, rotate: 4, opacity: 0.66 },
     ],
     keys: cardKeys('c04'),
   },
@@ -131,7 +150,15 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: -5,
     tilt: -2.4,
     tapes: [
-      { anchor: 'right', offset: 22, top: -13, width: 88, height: 25, rotate: -4, opacity: 0.62 },
+      {
+        anchor: 'right',
+        offset: 5.1,
+        top: -13,
+        width: 20.5,
+        height: 25,
+        rotate: -4,
+        opacity: 0.62,
+      },
     ],
     keys: cardKeys('c05'),
   },
@@ -143,7 +170,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: 6,
     tilt: 1.5,
     tapes: [
-      { anchor: 'center', offset: 0, top: -13, width: 88, height: 25, rotate: -2, opacity: 0.64 },
+      { anchor: 'center', offset: 0, top: -13, width: 20.5, height: 25, rotate: -2, opacity: 0.64 },
     ],
     keys: cardKeys('c06'),
   },
@@ -155,7 +182,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: -6,
     tilt: -1.8,
     tapes: [
-      { anchor: 'right', offset: 24, top: -14, width: 90, height: 26, rotate: 5, opacity: 0.66 },
+      { anchor: 'right', offset: 5.6, top: -14, width: 20.9, height: 26, rotate: 5, opacity: 0.66 },
     ],
     keys: cardKeys('c07'),
   },
@@ -167,7 +194,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: 7,
     tilt: 2.4,
     tapes: [
-      { anchor: 'left', offset: 26, top: -13, width: 86, height: 25, rotate: -6, opacity: 0.62 },
+      { anchor: 'left', offset: 6.0, top: -13, width: 20.0, height: 25, rotate: -6, opacity: 0.62 },
     ],
     keys: cardKeys('c08'),
   },
@@ -179,7 +206,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: -7,
     tilt: -1.2,
     tapes: [
-      { anchor: 'right', offset: 28, top: -13, width: 84, height: 25, rotate: 4, opacity: 0.6 },
+      { anchor: 'right', offset: 6.5, top: -13, width: 19.5, height: 25, rotate: 4, opacity: 0.6 },
     ],
     keys: cardKeys('c09'),
   },
@@ -191,7 +218,7 @@ export const POSTCARDS: readonly Postcard[] = [
     enterTilt: 5,
     tilt: 1.2,
     tapes: [
-      { anchor: 'center', offset: 0, top: -14, width: 96, height: 27, rotate: -3, opacity: 0.68 },
+      { anchor: 'center', offset: 0, top: -14, width: 22.3, height: 27, rotate: -3, opacity: 0.68 },
     ],
     keys: cardKeys('c10'),
   },
@@ -208,7 +235,7 @@ export const HEADER_POLAROID = {
     anchor: 'center',
     offset: 0,
     top: -15,
-    width: 104,
+    width: 34.7,
     height: 28,
     rotate: -3,
     opacity: 0.7,

@@ -47,7 +47,7 @@ export function JourneyHeader() {
   return (
     <header
       ref={ref}
-      className="max-w-page mx-auto grid grid-cols-[minmax(0,1fr)] justify-items-center gap-[34px] px-6 pt-[clamp(56px,9vw,120px)] pb-[clamp(30px,5vw,64px)] text-center"
+      className="max-w-page mx-auto grid grid-cols-[minmax(0,1fr)] justify-items-center gap-[clamp(22px,5vw,34px)] px-[clamp(14px,4vw,24px)] pt-[clamp(56px,9vw,120px)] pb-[clamp(30px,5vw,64px)] text-center"
     >
       <p className="font-label text-kicker tracking-kicker text-muted uppercase">
         {t('header.kicker')}
@@ -64,7 +64,7 @@ export function JourneyHeader() {
       </motion.div>
 
       {/* A thread dropping out of the header into the timeline's dashed spine. */}
-      <div aria-hidden className="hairline h-[70px] w-px" />
+      <div aria-hidden className="hairline h-[clamp(44px,9vw,70px)] w-px" />
     </header>
   )
 }

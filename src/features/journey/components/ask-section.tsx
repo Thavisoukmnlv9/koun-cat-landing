@@ -112,7 +112,7 @@ export function AskSection() {
     <section
       ref={ref}
       data-revealed={revealed || undefined}
-      className="reveal max-w-page mx-auto flex flex-col items-center gap-6.5 px-6 pt-[clamp(30px,6vw,80px)]"
+      className="reveal max-w-page mx-auto flex flex-col items-center gap-6.5 px-[clamp(14px,4vw,24px)] pt-[clamp(30px,6vw,80px)]"
     >
       <p className="font-label text-label tracking-section text-muted uppercase">
         {t('ask.kicker')}
@@ -133,7 +133,7 @@ export function AskSection() {
         aria-controls={letterId}
         aria-label={t('a11y.openLetter')}
         onClick={openLetter}
-        className="font-label text-label-sm tracking-count text-muted-hint cursor-pointer uppercase"
+        className="font-label text-label-sm tracking-count text-muted-hint hover:text-ink active:text-ink -my-4 cursor-pointer px-3 py-4 uppercase"
       >
         {sealBroken ? t('ask.hintAgain') : t('ask.hint')}
       </button>

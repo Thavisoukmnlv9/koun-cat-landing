@@ -22,13 +22,13 @@ export function AlbumControls({
   const { count, nextKey, canPrev, canNext } = labels
 
   return (
-    <div className="mt-1.5 flex items-center gap-4">
+    <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-4">
       <button
         type="button"
         disabled={!canPrev}
         aria-label={t('a11y.prevPage')}
         onClick={() => onTurn(-1)}
-        className="font-label text-label-sm tracking-label text-accent border-accent/45 cursor-pointer border px-4 py-2.5 whitespace-nowrap uppercase disabled:cursor-default disabled:opacity-35"
+        className="font-label text-label-sm tracking-label text-accent border-accent/45 cursor-pointer border px-4 py-3.5 whitespace-nowrap uppercase disabled:cursor-default disabled:opacity-35"
       >
         {t('album.controls.prev')}
       </button>
@@ -45,7 +45,7 @@ export function AlbumControls({
         disabled={!canNext}
         aria-label={t('a11y.nextPage')}
         onClick={() => onTurn(1)}
-        className="font-label text-label-sm tracking-label text-paper-card bg-accent border-accent cursor-pointer border px-4 py-2.5 whitespace-nowrap uppercase disabled:cursor-default disabled:opacity-35"
+        className="font-label text-label-sm tracking-label text-paper-card bg-accent border-accent cursor-pointer border px-4 py-3.5 whitespace-nowrap uppercase disabled:cursor-default disabled:opacity-35"
       >
         {t(nextKey)}
       </button>

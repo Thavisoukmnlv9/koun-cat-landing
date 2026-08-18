@@ -97,7 +97,7 @@ export function OpticalTrack({ src, className }: { src: string; className?: stri
           type="button"
           aria-label={t(playing ? 'a11y.pauseSound' : 'a11y.playSound')}
           onClick={onToggle}
-          className="font-label text-label-sm tracking-label text-muted-label border-rule cursor-pointer border px-4 py-2.5 whitespace-nowrap uppercase"
+          className="font-label text-label-sm tracking-label text-muted-label border-rule cursor-pointer border px-4 py-3.5 whitespace-nowrap uppercase"
         >
           {t(playing ? 'sound.pause' : 'sound.play')}
         </button>

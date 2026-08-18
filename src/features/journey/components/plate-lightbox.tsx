@@ -115,7 +115,7 @@ export function PlateLightbox({ index, onClose, onSelect }: PlateLightboxProps) 
                 onClick={() => step(-1)}
                 onKeyDown={swallowArrows}
                 aria-label={t('a11y.prevPlate')}
-                className="font-label text-label-sm tracking-label text-muted-label hover:text-ink border-rule cursor-pointer border px-3 py-2 uppercase"
+                className="font-label text-label-sm tracking-label text-muted-label hover:text-ink active:text-ink border-rule cursor-pointer border px-3 py-3 uppercase"
               >
                 {t('album.index.prev')}
               </button>
@@ -135,7 +135,7 @@ export function PlateLightbox({ index, onClose, onSelect }: PlateLightboxProps) 
                 onClick={() => step(1)}
                 onKeyDown={swallowArrows}
                 aria-label={t('a11y.nextPlate')}
-                className="font-label text-label-sm tracking-label text-muted-label hover:text-ink border-rule cursor-pointer border px-3 py-2 uppercase"
+                className="font-label text-label-sm tracking-label text-muted-label hover:text-ink active:text-ink border-rule cursor-pointer border px-3 py-3 uppercase"
               >
                 {t('album.index.next')}
               </button>
@@ -150,7 +150,7 @@ export function PlateLightbox({ index, onClose, onSelect }: PlateLightboxProps) 
               type="button"
               onClick={onClose}
               aria-label={t('a11y.closePlate')}
-              className="font-label text-label-sm tracking-label text-ink hover:border-ink/45 border-ink/25 mt-1 cursor-pointer border px-4 py-2.5 uppercase"
+              className="font-label text-label-sm tracking-label text-ink hover:border-ink/45 active:border-ink/45 border-ink/25 mt-1 cursor-pointer border px-4 py-3.5 uppercase"
             >
               {t('album.index.close')}
             </button>
