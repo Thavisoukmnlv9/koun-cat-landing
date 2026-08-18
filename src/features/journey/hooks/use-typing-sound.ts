@@ -66,6 +66,7 @@ export function useTypingSound(running: boolean): TypingSound {
   const tailRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [blocked, setBlocked] = useState(false)
+  const blockedRef = useRef(false)
   const [soundOn, setSoundOn] = useState(true)
   // `onType` is invoked from a Motion frame callback, which closes over
   // whatever this hook returned when the animation started. A ref is how it
@@ -78,6 +79,34 @@ export function useTypingSound(running: boolean): TypingSound {
     // Silence lands on the press rather than waiting out the tail timer.
     if (!soundOn && ref.current) ref.current.muted = true
   }, [soundOn])
+
+  /** There is no sound to be had on this device. Latched, and hides the control. */
+  const refuse = useCallback(() => {
+    blockedRef.current = true
+    setBlocked(true)
+  }, [])
+
+  /**
+   * Starts or resumes the tape, and decides what a refusal meant.
+   *
+   * `AbortError` is not a verdict. Chrome counts a muted element as *video-only*
+   * media and suspends it to save power whenever the page is backgrounded — so
+   * a visitor who opens the letter and glances at another tab gets one of these
+   * through no fault of the page. Treating it as permanent would silence the
+   * rest of the letter and take the control away mid-read. Only a policy
+   * refusal is forever, and that is what `refuse` is for.
+   */
+  const roll = useCallback(() => {
+    const audio = ref.current
+    if (!audio || blockedRef.current) return
+
+    // Nothing awaited in front of it, for the reason `use-media-transport`
+    // gives at its own play(): Chrome spends the activation on the first await.
+    const started = audio.play() as Promise<void> | undefined
+    started?.catch((error: DOMException) => {
+      if (error.name !== 'AbortError') refuse()
+    })
+  }, [refuse])
 
   /**
    * Starts the tape, muted.
@@ -106,18 +135,18 @@ export function useTypingSound(running: boolean): TypingSound {
     // between the two calls is audible.
     audio.muted = true
     audio.volume = LEVEL
-
-    // Nothing awaited in front of it, for the reason `use-media-transport`
-    // gives at its own play(): Chrome spends the activation on the first await.
-    const started = audio.play() as Promise<void> | undefined
-    started?.catch(() => setBlocked(true))
-  }, [reduced])
+    roll()
+  }, [reduced, roll])
 
   const onType = useCallback(() => {
     const audio = ref.current
-    if (!audio || !soundOnRef.current) return
+    if (!audio || !soundOnRef.current || blockedRef.current) return
 
     audio.muted = false
+    // Coming back to a tab Chrome suspended should not find the letter
+    // permanently silent. Guarded on `paused`, so a rolling tape is left alone
+    // and a genuinely refused one is not asked four hundred times.
+    if (audio.paused) roll()
 
     if (tailRef.current !== null) clearTimeout(tailRef.current)
     tailRef.current = setTimeout(() => {
@@ -125,7 +154,7 @@ export function useTypingSound(running: boolean): TypingSound {
       const node = ref.current
       if (node) node.muted = true
     }, TAIL_MS)
-  }, [])
+  }, [roll])
 
   const toggleSound = useCallback(() => setSoundOn((on) => !on), [])
 
@@ -138,10 +167,10 @@ export function useTypingSound(running: boolean): TypingSound {
     const audio = ref.current
     if (!audio) return
 
-    const onError = () => setBlocked(true)
+    const onError = () => refuse()
     audio.addEventListener('error', onError)
     return () => audio.removeEventListener('error', onError)
-  }, [])
+  }, [refuse])
 
   /**
    * Putting the letter back.

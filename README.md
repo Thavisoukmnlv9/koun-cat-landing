@@ -173,6 +173,14 @@ accompanying the letter, it is the letter being written.
   different task — so the element is started, silently, from the tap itself and
   simply rolls until the letter is closed. Move that call into an effect and the
   page goes quiet on iPhone with nothing in the console to say why.
+- **An `AbortError` from `play()` is not a verdict.** Chrome counts a muted
+  element as _video-only_ media and suspends it to save power whenever the page
+  is backgrounded, which rejects the pending `play()` with
+  _"video-only background media was paused to save power"_. Latching that would
+  silence the rest of the letter, and take the mute control away mid-read, for
+  someone who only glanced at another tab. So only `NotAllowedError` and a
+  failed load are permanent, and a keystroke arriving at a paused tape starts it
+  again.
 - **The gate is `muted`, not `pause()`.** It is synchronous, so it cannot clip
   the first click of a burst the way resuming a decode can; rapid play/pause
   pairs produce _"The play() request was interrupted"_ noise; letting the tape

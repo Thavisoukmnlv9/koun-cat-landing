@@ -34,6 +34,7 @@ function Harness({ running = true }: { running?: boolean }) {
       <button type="button" onClick={sound.toggleSound}>
         {sound.soundOn ? 'on' : 'off'}
       </button>
+      <p data-testid="available">{sound.available ? 'yes' : 'no'}</p>
     </>
   )
 }
@@ -114,6 +115,50 @@ describe('useTypingSound', () => {
 
     await user.click(press('type'))
     expect(tape().muted).toBe(true)
+  })
+
+  it('treats a power-saving pause as temporary rather than as a verdict', async () => {
+    // Chrome counts a muted element as video-only media and suspends it in a
+    // backgrounded tab. Latching that would silence the rest of the letter and
+    // take the control away mid-read, for someone who only glanced at another
+    // tab.
+    play.mockImplementation(() =>
+      Promise.reject(new DOMException('paused to save power', 'AbortError')),
+    )
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    render(<Harness />)
+
+    await user.click(press('prime'))
+    await vi.advanceTimersByTimeAsync(0)
+
+    expect(screen.getByTestId('available')).toHaveTextContent('yes')
+  })
+
+  it('gives up, and takes the control with it, when the browser refuses outright', async () => {
+    play.mockImplementation(() =>
+      Promise.reject(new DOMException('gesture required', 'NotAllowedError')),
+    )
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    render(<Harness />)
+
+    await user.click(press('prime'))
+    await vi.advanceTimersByTimeAsync(0)
+
+    expect(screen.getByTestId('available')).toHaveTextContent('no')
+  })
+
+  it('picks a suspended tape back up on the next keystroke', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    render(<Harness />)
+
+    await user.click(press('prime'))
+    play.mockClear()
+
+    // jsdom reports `paused` forever, which is precisely the state this guards.
+    await user.click(press('type'))
+
+    expect(play).toHaveBeenCalled()
+    expect(tape().muted).toBe(false)
   })
 
   it('stops and rewinds when the letter is put back', async () => {
