@@ -1,0 +1,25 @@
+{
+  // A second home for the same build, and the reason is the network rather than
+  // the code: the ISP this site is read on filters *.pages.dev by name at the
+  // TLS handshake, so koun-cat-journey.pages.dev never answers there, while
+  // *.workers.dev completes normally from the same machine to the same
+  // Cloudflare address. Deploying the built `dist` as a Worker gives the page a
+  // URL that opens where it is actually meant to be read.
+  //
+  // The Pages project stays as it is. This is an addition, not a replacement,
+  // and both serve the same `npm run build` output.
+  //
+  // Note that `functions/_middleware.ts` does NOT apply here — Pages Functions
+  // are a Pages construct. The host gate protects the pages.dev address only,
+  // and this workers.dev address is open to anyone holding the link.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "koun-cat-journey",
+  "compatibility_date": "2026-08-18",
+  "assets": {
+    "directory": "./dist",
+    // Ten postcards on one page, but the album and the letter are routed
+    // client-side; an unknown path has to land on index.html for the router to
+    // read it, not on Cloudflare's 404.
+    "not_found_handling": "single-page-application",
+  },
+}
