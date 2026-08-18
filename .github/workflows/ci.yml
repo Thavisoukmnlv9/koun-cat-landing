@@ -1,25 +1,24 @@
-# Left commented out, as it was in the boilerplate. Uncomment to enable — these
-# are the same four commands the project is verified with locally. The former
-# `e2e` job is gone along with Playwright.
+# The same five commands the project is verified with locally. The former `e2e`
+# job is gone along with Playwright.
+name: CI
 
-# name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
 
-# on:
-#   push:
-#     branches: [main]
-#   pull_request:
-
-# jobs:
-#   verify:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: actions/setup-node@v4
-#         with:
-#           node-version: 26
-#           cache: npm
-#       - run: npm ci
-#       - run: npm run lint
-#       - run: npm run typecheck
-#       - run: npm run test
-#       - run: npm run build
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
