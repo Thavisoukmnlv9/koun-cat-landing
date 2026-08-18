@@ -1,0 +1,149 @@
+/*
+ * Self-hosted type — Caveat (hand) · Courier Prime (labels) · EB Garamond (body)
+ * plus Noto Sans (Latin fallback + Lao).
+ *
+ * Strategy: every face is tagged with a `unicode-range`, so the browser fetches
+ * a file ONLY when a character from its range is actually painted.
+ *
+ * The Latin gate is what makes the bilingual stack work with no per-language
+ * classes anywhere in the components. A heading declares
+ * `font-family: "Caveat", "Noto Sans", cursive`; English glyphs match Caveat,
+ * and Lao glyphs fall straight through to the Noto Sans Lao face because Caveat,
+ * Courier Prime and EB Garamond simply do not claim that range. Switching the
+ * site to Lao therefore restyles itself — no conditional font logic.
+ *
+ * The trade-off is deliberate and worth naming: Caveat is a handwriting face
+ * with no Lao coverage, so Lao readers get Noto Sans Lao's clean, upright
+ * strokes where English readers get handwriting. Nothing on Google Fonts draws
+ * Lao in a convincingly handwritten voice; legibility wins over consistency.
+ * See the `:lang(lo)` block in globals.css for the metrics that has to fix up.
+ *
+ * Weights: Caveat is a variable font covering 400–700 in a single file, so one
+ * @font-face serves both the 400 backs and the 600 headings. The other three are
+ * static 400 instances — the source's Google Fonts link also requested Courier
+ * Prime 700/italic and EB Garamond 500, none of which any rule paints.
+ * Synthesis is disabled in globals.css (`font-synthesis: none`), so a weight
+ * with no real file resolves to the nearest face rather than a faked one.
+ */
+
+/* The Latin coverage shared by every Latin-script face below. Duplicated
+   literally per @font-face because CSS has no variable for unicode-range. */
+
+/* ─── Caveat — the hand: H1, section and card titles, every note ─────────── */
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/caveat-variable.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+
+/* ─── Courier Prime — dates, kickers, plate labels, buttons ──────────────── */
+@font-face {
+  font-family: "Courier Prime";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/courier-prime-regular.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+
+/* ─── EB Garamond — reading copy. Italic is load-bearing: the header intro
+       and the letter's subtitle are both set in it. ─────────────────────── */
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/eb-garamond-regular.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/eb-garamond-italic.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+
+/* ─── Noto Sans — Latin fallback ─────────────────────────────────────────── */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 100 400;
+  font-display: swap;
+  src: url("/fonts/noto-sans-regular.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/noto-sans-medium.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 600 900;
+  font-display: swap;
+  src: url("/fonts/noto-sans-bold.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0100-017F, U+0180-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F,
+    U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF,
+    U+25A0-25FF, U+2600-26FF;
+}
+
+/* ─── Noto Sans Lao — everything the page says in Lao ────────────────────── */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 100 400;
+  font-display: swap;
+  src: url("/fonts/noto-sans-lao-regular.woff2") format("woff2");
+  unicode-range: U+0E80-0EFF;
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/noto-sans-lao-medium.woff2") format("woff2");
+  unicode-range: U+0E80-0EFF;
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 600 900;
+  font-display: swap;
+  src: url("/fonts/noto-sans-lao-bold.woff2") format("woff2");
+  unicode-range: U+0E80-0EFF;
+}

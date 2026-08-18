@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#efe7d7" />
+
+    <title>Our Journey — a small archive, kept by hand</title>
+    <!-- Title and description are re-set per language at runtime; these are the
+         English defaults, which is what crawlers without JS will read. -->
+    <meta
+      name="description"
+      content="Ten postcards, one album, and one letter that was never sent. A hand-made record of us."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Our Journey" />
+    <meta
+      property="og:description"
+      content="Ten postcards, one album, and one letter that was never sent."
+    />
+    <!-- No og:image on purpose. The only images here are private photographs,
+         and a link preview would put one in front of anyone the URL is pasted
+         to. The summary card carries text only. -->
+    <meta name="twitter:card" content="summary" />
+
+    <!-- TODO: still the stock boilerplate marks inherited from the starter. -->
+    <link rel="icon" href="/favicon-48x48.png" sizes="48x48" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" href="/icon.svg" sizes="any" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+
+    <!-- The two faces above the fold: Caveat sets the LCP heading, EB Garamond
+         the intro beneath it. Lao streams in on demand via unicode-range — see
+         src/styles/fonts.css. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/caveat-variable.woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/eb-garamond-regular.woff2"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

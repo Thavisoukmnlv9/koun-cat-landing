@@ -1,0 +1,5 @@
+# This page is a private letter with real names and photographs in it. Keeping
+# it out of search indexes is the safe default; if it is ever meant to be found,
+# change this to `Allow: /`.
+User-agent: *
+Disallow: /

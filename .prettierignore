@@ -1,0 +1,10 @@
+dist
+coverage
+node_modules
+package-lock.json
+.husky/_
+
+# Hand-maintained: the @theme token block and the unicode-range font faces are
+# laid out and commented deliberately, and Prettier reflows both unhelpfully.
+src/styles/globals.css
+src/styles/fonts.css

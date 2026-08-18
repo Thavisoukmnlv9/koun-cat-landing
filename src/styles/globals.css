@@ -1,0 +1,1074 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/* ============================================================================
+   OUR JOURNEY — design tokens
+   Ported from the hand-made source page, where every one of these values lived
+   in an inline `style=""` attribute.
+
+   The whole page is one material: warm paper, a little sun-bleached, with
+   things stuck to it. Three colours do three jobs — paper is ground, ink is
+   voice, and a single burnt red is the only thing allowed to raise its hand
+   (the flip hint, the letter's chips, one button). Everything else is a shade
+   of the paper it is printed on.
+
+   Nothing here is a brand palette. It is a description of an object.
+   ============================================================================ */
+
+@theme {
+  /* ─── Paper ─────────────────────────────────────────────────────────────
+     Seven near-identical creams, and the differences matter: a postcard's face
+     is warmer than its back, and the album's left leaf is duller than its
+     right, because that is how light falls on a book you are holding open. */
+  --color-paper: #efe7d7; /* the ground */
+  --color-paper-card: #fcf9f1; /* polaroid, card-front highlight, letter */
+  --color-paper-card-deep: #f3ecdc; /* card-front shadow stop */
+  --color-paper-back: #f7f1e3; /* card-back / album left leaf highlight */
+  --color-paper-back-deep: #efe6d2; /* card-back shadow stop */
+  --color-paper-leaf: #ede4d0; /* album left leaf shadow stop */
+  --color-paper-plate: #f2ebda; /* album right leaf shadow stop */
+  --color-photo-bed: #e8e0d0; /* what shows through before an <img> paints */
+
+  /* ─── Ink ───────────────────────────────────────────────────────────────
+     Never black. The darkest value on the page is #2e2921, which is a very
+     dark brown — black on cream reads as a laser printer, not a pen. */
+  --color-ink: #5a5142; /* body prose */
+  --color-ink-strong: #2e2921; /* h1, h2, h3 */
+  --color-ink-soft: #3a342b; /* the note on a card's back */
+  --color-ink-caption: #4a4234; /* polaroid caption */
+  --color-ink-faint: #6b6152; /* endpaper note, closing line */
+
+  /* ─── Labels — the typewriter voice: dates, kickers, plate numbers ────── */
+  --color-muted: #9c8a6e;
+  --color-muted-label: #96856b;
+  --color-muted-hint: #a9977a;
+
+  /* ─── Accent — rationed, on purpose ─────────────────────────────────────
+     Burnt red appears on exactly five things: "tap to read the back", the
+     album's next button and cover, the letter's two chips, focus rings, and
+     the reel's run control — which earns it by being the same kind of object
+     as the album's next button, the one control that advances the thing.
+     Spend it anywhere else and the page stops looking hand-made. The reel's
+     other highlights are lamp amber, which is light rather than ink. */
+  --color-accent: #b4523f;
+  --color-accent-strong: #8f3c2c;
+
+  /* ─── Materials ─────────────────────────────────────────────────────────
+     Things that are not paper: tape, board, envelope stock, ruled lines. */
+  --color-tape: #e4d6b7;
+  --color-board: #d8c9a8;
+  --color-board-deep: #c9b892;
+  /* The accent as a marker pen, for the words currently being read aloud. */
+  --color-highlight: rgb(180 82 63 / 0.16);
+  --color-envelope: #f0e6d2;
+  --color-envelope-deep: #e4d7bc;
+  --color-flap: #e8dbc1;
+  --color-rule: rgb(150 128 96 / 0.45); /* the dashed timeline spine */
+  --color-rule-strong: rgb(150 128 96 / 0.5); /* the rule on a card's back */
+
+  /* ─── Type ──────────────────────────────────────────────────────────────
+     Three voices: a hand, a typewriter, and a printing press.
+
+     Each stack ends in "Noto Sans" so Lao falls through automatically — the
+     Latin faces do not claim U+0E80-0EFF, so no component ever needs to know
+     which language it is rendering. See the note atop fonts.css. */
+  --font-hand: "Caveat", "Noto Sans", cursive;
+  --font-label: "Courier Prime", "Noto Sans", monospace;
+  --font-body: "EB Garamond", "Noto Sans", Georgia, serif;
+
+  /* Display sizes are clamp()ed rather than breakpoint-switched, which is what
+     lets the page hold its proportions from a phone to a desktop with no `md:`
+     juggling. Leading is tight because Caveat's ascenders already carry the
+     air; see the :lang(lo) block at the foot of this file for why Lao cannot
+     inherit that. */
+  --text-display: clamp(60px, 13vw, 132px); /* "Our Journey" */
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.01em;
+
+  --text-album: clamp(40px, 7vw, 72px); /* "The Album" */
+  --text-album--line-height: 1;
+
+  --text-cover: clamp(32px, 4.6vw, 52px); /* the album's cover title */
+  --text-cover--line-height: 1;
+
+  --text-ask: clamp(30px, 5.2vw, 46px); /* the question in the letter */
+  --text-ask--line-height: 1.2;
+
+  --text-plate: clamp(26px, 3.4vw, 38px); /* album plate titles */
+  --text-plate--line-height: 1.05;
+
+  --text-card-title: 34px; /* postcard titles */
+  --text-card-title--line-height: 1.05;
+
+  --text-note: clamp(22px, 3vw, 27px); /* the handwriting on a card's back */
+  --text-note--line-height: 1.38;
+
+  --text-endpaper: clamp(20px, 2.6vw, 29px);
+  --text-endpaper--line-height: 1.35;
+
+  --text-polaroid: 26px; /* polaroid caption, closing line */
+
+  --text-lead: clamp(18px, 2.4vw, 22px); /* the intro under the title */
+  --text-lead--line-height: 1.55;
+
+  --text-ask-sub: clamp(16px, 2vw, 19px);
+  --text-ask-sub--line-height: 1.6;
+
+  /* The letter's body, and the only run of continuous prose on the page —
+     hence the loosest leading here. See the :lang(lo) counterpart at the foot
+     of this file; it is the longest stretch of Lao anywhere on the page, so a
+     leading that is a hair tight collides on every line rather than once. */
+  --text-letter: clamp(16px, 2.05vw, 19px);
+  --text-letter--line-height: 1.85;
+
+  --text-prose: 17px; /* card captions and the body default */
+  --text-prose--line-height: 1.55;
+
+  --text-plate-body: clamp(14px, 1.7vw, 17px);
+  --text-plate-body--line-height: 1.6;
+
+  --text-kicker: 12px;
+  --text-label: 11px;
+  --text-label-sm: 10px;
+
+  /* Tracking carries the typewriter voice — Courier Prime set at 10-12px only
+     reads as a label because it is spaced this far apart. */
+  --tracking-kicker: 0.34em;
+  --tracking-section: 0.3em;
+  --tracking-edition: 0.26em;
+  --tracking-count: 0.22em;
+  --tracking-label: 0.2em;
+  --tracking-chip: 0.18em;
+  --tracking-date: 0.16em;
+
+  /* ─── Elevation ─────────────────────────────────────────────────────────
+     One idiom throughout: a warm brown shadow, thrown far and pulled tight
+     with a large negative spread, so objects hover rather than float. Grey or
+     black shadows on cream go instantly digital. */
+  --shadow-card:
+    0 1px 0 rgb(0 0 0 / 0.05), 0 22px 38px -24px rgb(70 50 30 / 0.5);
+  --shadow-card-back: 0 22px 38px -24px rgb(70 50 30 / 0.5);
+  --shadow-polaroid:
+    0 1px 0 rgb(0 0 0 / 0.05), 0 20px 34px -22px rgb(70 50 30 / 0.5);
+  --shadow-tape: 0 2px 5px rgb(70 50 30 / 0.15);
+  --shadow-board: 0 30px 50px -30px rgb(70 50 30 / 0.6);
+  --shadow-leaf-left: inset -16px 0 24px -16px rgb(70 50 30 / 0.4);
+  --shadow-leaf-right:
+    inset 16px 0 24px -16px rgb(70 50 30 / 0.4),
+    0 10px 26px -16px rgb(70 50 30 / 0.5);
+  --shadow-envelope:
+    inset 0 1px 0 rgb(255 255 255 / 0.5), 0 26px 44px -26px rgb(70 50 30 / 0.55);
+  --shadow-letter: 0 14px 24px -18px rgb(70 50 30 / 0.5);
+
+  /* ─── Motion ────────────────────────────────────────────────────────────
+     Four curves for four gestures, and they are not interchangeable: a card
+     settling onto the page decelerates gently; a card turning over is heavier
+     at the start; a page in a book snaps; a wax flap falls open. */
+  --ease-reveal: cubic-bezier(0.2, 0.75, 0.2, 1);
+  --ease-flip: cubic-bezier(0.4, 0.05, 0.2, 1);
+  --ease-turn: cubic-bezier(0.35, 0.05, 0.2, 1);
+  --ease-flap: cubic-bezier(0.5, 0.02, 0.2, 1);
+
+  --animate-turn: jw-turn 0.78s var(--ease-turn) both;
+  --animate-turn-back: jw-turn-back 0.78s var(--ease-turn) both;
+
+  /* Asymmetric on purpose: a page swung in from the left travels further than
+     one swung back from the right, which is how a real book behaves. */
+  @keyframes jw-turn {
+    from {
+      transform: rotateY(-88deg);
+      opacity: 0.55;
+    }
+    to {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+  @keyframes jw-turn-back {
+    from {
+      transform: rotateY(72deg);
+      opacity: 0.55;
+    }
+    to {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  /* ─── Geometry ──────────────────────────────────────────────────────────── */
+  --aspect-photo: 3 / 4; /* every timeline and header photo */
+  --aspect-book: 8 / 5;
+  --perspective-envelope: 900px;
+  --perspective-card: 1600px;
+  --perspective-book: 2400px;
+  --container-page: 1040px; /* → max-w-page */
+
+  /* ─── The reel ──────────────────────────────────────────────────────────
+     A projected image is the one thing on this page that is not printed on
+     paper — it is light thrown at it. These are the only values in the file
+     that go darker than the ink, and they earn it: a film gate is a dark
+     surround and the picture inside it is lit. Still brown, still never black.
+
+     Super 8 was shot silent. You ran the projector and put a record on beside
+     it, which is why the reel is muted by default and the sound is its own
+     object. */
+  --color-gate: #241e17; /* the surround */
+  --color-gate-deep: #191510; /* where the vignette lands */
+  --color-lamp: #f7e6bd; /* tungsten, at the hotspot */
+  --color-lamp-warm: #e3ac66; /* the spill on the paper */
+  --color-emulsion: #d9c8a4; /* unexposed film base — both strips' ground */
+  --color-perf: #c2ad86; /* the sprocket rail */
+
+  --aspect-gate: 16 / 9;
+  --radius-gate: clamp(6px, 1.1vw, 13px);
+
+  /* A bulb coming up to heat: slow off the mark, then all at once. */
+  --ease-lamp: cubic-bezier(0.33, 0, 0.2, 1);
+
+  --animate-grain: jw-grain 0.5s steps(1, end) infinite;
+  --animate-weave: jw-weave 1.15s steps(1, end) infinite;
+  --animate-flicker: jw-flicker 0.72s steps(1, end) infinite;
+  --animate-breathe: jw-breathe 4.2s ease-in-out 700ms infinite;
+
+  /* Every one of these steps rather than eases, and that is the whole point.
+     Real grain re-randomises on each exposure — it does not slide across the
+     picture. `steps(1, end)` holds each keyframe then hard-cuts to the next,
+     so eight positions over half a second lands near Super 8's 18fps. Grain
+     that drifts smoothly is the single clearest tell that a film look was
+     applied rather than photographed.
+
+     A tile can only ever be shifted, never re-randomised, so the offsets have
+     to work hard: they are large, non-round and share no factor with the
+     300px tile. Round offsets, or anything near a multiple of the tile, visibly
+     re-align and give the whole illusion away. Re-seeding feTurbulence per
+     frame would genuinely re-randomise, but it is per-pixel CPU work in every
+     engine and running it 16 times a second is not free on a phone. */
+  @keyframes jw-grain {
+    0% {
+      background-position: 0 0;
+    }
+    12.5% {
+      background-position: -137px -53px;
+    }
+    25% {
+      background-position: -83px -211px;
+    }
+    37.5% {
+      background-position: -229px -71px;
+    }
+    50% {
+      background-position: -47px -167px;
+    }
+    62.5% {
+      background-position: -191px -113px;
+    }
+    75% {
+      background-position: -101px -19px;
+    }
+    87.5% {
+      background-position: -263px -149px;
+    }
+  }
+
+  /* Gate weave: the film is never registered perfectly, so the image wanders
+     inside a frame that stays put. The constant scale is overscan — without it
+     the wander would expose an edge of the gate on every cycle. */
+  @keyframes jw-weave {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1.014);
+    }
+    16% {
+      transform: translate3d(-0.7px, 1.3px, 0) scale(1.014);
+    }
+    32% {
+      transform: translate3d(0.5px, -0.9px, 0) scale(1.014);
+    }
+    48% {
+      transform: translate3d(-0.3px, -1.4px, 0) scale(1.014);
+    }
+    64% {
+      transform: translate3d(0.8px, 0.6px, 0) scale(1.014);
+    }
+    80% {
+      transform: translate3d(-0.8px, 0.3px, 0) scale(1.014);
+    }
+    96% {
+      transform: translate3d(0.4px, 1.1px, 0) scale(1.014);
+    }
+  }
+
+  /* Shutter flicker — exposure varying frame to frame. Kept shallow: heavy
+     flicker reads as a broken screen rather than a running projector. */
+  @keyframes jw-flicker {
+    0%,
+    100% {
+      opacity: 0.05;
+    }
+    14% {
+      opacity: 0.11;
+    }
+    28% {
+      opacity: 0.03;
+    }
+    43% {
+      opacity: 0.09;
+    }
+    57% {
+      opacity: 0.04;
+    }
+    71% {
+      opacity: 0.12;
+    }
+    86% {
+      opacity: 0.06;
+    }
+  }
+
+  /* The bulb's thermal breathing — slow and continuous, deliberately unlike
+     the stepped shutter above. Delayed so it starts after the lamp has come
+     up, leaving the warm-up transition to run unopposed. */
+  @keyframes jw-breathe {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.84;
+    }
+  }
+
+  /* ─── The lightbox ──────────────────────────────────────────────────────
+     A plate lifted out of the album and held up to the light. The scrim is
+     brown rather than black for the same reason the ink is: black over cream
+     reads as a dialog box, and the page has no black in it anywhere except
+     inside the film gate, which is a screen rather than a sheet of paper.
+
+     Named `--color-scrim` rather than a one-off rgb() in the component because
+     it is the only value on the page that has to sit *over* every other one,
+     and it is the first thing that would need retuning if the paper ever
+     changed weight. */
+  --color-scrim: rgb(41 33 24 / 0.62);
+
+  /* ─── The caret ─────────────────────────────────────────────────────────
+     Stepped, not eased, and for the same reason the grain and the shutter
+     are: a cursor on a machine does not fade, it is either struck or it is
+     not. `steps(1, end)` holds each half then hard-cuts. The period is 1.06s
+     rather than a round one so it never falls into lockstep with the reel's
+     0.72s flicker when both are on screen. */
+  --animate-caret: jw-caret 1.06s steps(1, end) infinite;
+
+  @keyframes jw-caret {
+    0%,
+    54% {
+      opacity: 1;
+    }
+    55%,
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Registered so it interpolates as a number rather than a token swap, and so
+   the very first paint has a value before any script has run. Unitless on
+   purpose: a number composes inside calc(), a percentage does not. */
+@property --played {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    /* Weight ranges in fonts.css map every requested weight to a real file.
+       Synthesis is off because faked bold on Lao strokes distorts visibly. */
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    margin: 0;
+    @apply bg-paper text-ink text-prose;
+  }
+
+  /* One visible focus treatment for every interactive element. The accent
+     carries emphasis everywhere else on the page, so it carries focus too. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* ─── Surfaces ────────────────────────────────────────────────────────────
+     Layered background-image values have no @theme namespace in Tailwind v4,
+     so every gradient on the page lives here as a named material instead. */
+
+  /* The ground everything sits on: a warm highlight top-left, a shadow
+     bottom-right, and a 94° ruling that reads as laid paper up close. The
+     ruling is what stops the page looking like a flat beige rectangle. */
+  .paper-ground {
+    background-color: var(--color-paper);
+    background-image:
+      radial-gradient(circle at 18% 12%, rgb(255 252 244 / 0.85), transparent 45%),
+      radial-gradient(circle at 82% 78%, rgb(214 197 168 / 0.5), transparent 50%),
+      repeating-linear-gradient(
+        94deg,
+        rgb(160 140 110 / 0.05) 0 2px,
+        transparent 2px 7px
+      );
+  }
+
+  .card-front {
+    background-image: linear-gradient(
+      160deg,
+      var(--color-paper-card),
+      var(--color-paper-card-deep)
+    );
+  }
+  .card-back {
+    background-image: linear-gradient(
+      160deg,
+      var(--color-paper-back),
+      var(--color-paper-back-deep)
+    );
+  }
+  .leaf-left {
+    background-image: linear-gradient(
+      160deg,
+      var(--color-paper-back),
+      var(--color-paper-leaf)
+    );
+  }
+  .leaf-right {
+    background-image: linear-gradient(
+      200deg,
+      var(--color-paper-card),
+      var(--color-paper-plate)
+    );
+  }
+  .book-board {
+    background-image: linear-gradient(
+      180deg,
+      var(--color-board),
+      var(--color-board-deep)
+    );
+  }
+  .book-cover {
+    background-image: linear-gradient(
+      200deg,
+      var(--color-accent),
+      var(--color-accent-strong)
+    );
+  }
+  /* The shadow in the crease. Sits above both leaves and eats no clicks. */
+  .book-gutter {
+    background-image: linear-gradient(
+      90deg,
+      rgb(70 50 30 / 0.22),
+      rgb(70 50 30 / 0.04) 45%,
+      rgb(70 50 30 / 0.22)
+    );
+  }
+  .envelope-body {
+    /* The flap turns in here, so the vanishing point belongs on the parent. */
+    perspective: var(--perspective-envelope);
+    background-image: linear-gradient(
+      165deg,
+      var(--color-envelope),
+      var(--color-envelope-deep)
+    );
+  }
+  /* The thread that drops out of the header into the timeline. */
+  .hairline {
+    background-image: linear-gradient(var(--color-board-deep), transparent);
+  }
+
+  /* ─── Washi tape ──────────────────────────────────────────────────────────
+     Every strip is a different size, angle and opacity, because a person stuck
+     them on one at a time. Those numbers are authored content and live in
+     data/postcards.ts; they arrive here as custom properties, since Tailwind
+     scans source text and cannot compile a runtime value into a class.
+
+     `backface-visibility: hidden` is not decoration — without it the strips
+     bleed through the card while it turns over. */
+  .washi {
+    position: absolute;
+    top: var(--tape-top);
+    width: var(--tape-w);
+    height: var(--tape-h);
+    transform: rotate(var(--tape-rot));
+    background: rgb(228 214 183 / var(--tape-a));
+    box-shadow: var(--shadow-tape);
+    backface-visibility: hidden;
+  }
+  .washi[data-anchor="center"] {
+    left: 50%;
+    margin-left: calc(var(--tape-w) / -2);
+  }
+  .washi[data-anchor="left"] {
+    left: var(--tape-x);
+  }
+  .washi[data-anchor="right"] {
+    right: var(--tape-x);
+  }
+
+  /* ─── Reveal ──────────────────────────────────────────────────────────────
+     Cards arrive tilted and lift into a smaller residual lean, so the page
+     looks arranged by hand rather than laid out by a grid. `--enter-tilt` and
+     `--tilt` come from the data record; `data-revealed` is set by useReveal.
+
+     Under reduced motion the hook starts elements revealed, so there is no
+     hidden frame to transition out of and this rule simply never animates. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 36px)) rotate(var(--enter-tilt, 0deg));
+  }
+  .reveal[data-revealed] {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      transition:
+        opacity 1s ease,
+        transform 1.2s var(--ease-reveal);
+    }
+  }
+
+  /* A card fading in, and nothing else. It is separate from `.reveal` because
+     the postcards' movement is on the scrollbar now rather than on a
+     transition, and Motion writes the whole `transform` shorthand — so the two
+     cannot share an element and the properties were split instead: CSS owns
+     the fade, `useScrollTilt` owns the tilt and the rise.
+
+     Opacity stays on an intersection observer on purpose. A scroll position is
+     a measurement and a measurement can be wrong; the failure mode of a
+     scroll-linked fade is text nobody can read, where the worst a mismeasured
+     tilt can do is leave a card at a slight angle. */
+  .card-fade {
+    opacity: 0;
+  }
+  .card-fade[data-revealed] {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card-fade {
+      transition: opacity 1s ease;
+    }
+  }
+
+  /* ─── Postcard flip ───────────────────────────────────────────────────── */
+  .flip-card {
+    transform-style: preserve-3d;
+  }
+  .flip-card[data-flipped] {
+    transform: rotateY(180deg);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .flip-card {
+      transition: transform 1s var(--ease-flip);
+    }
+  }
+
+  /* ─── The envelope ────────────────────────────────────────────────────────
+     The flap is a CSS-border triangle: a zero-height box whose left and right
+     borders are transparent and each half the envelope wide, so the top border
+     collapses to a point. Its width therefore has to equal the envelope's
+     exactly — hence one `--envelope-w`, declared once and read three times.
+     Duplicating that min() would be a latent bug the first time it changed.
+
+     What is no longer here is the movement. The flap's rotation and the
+     letter's lift used to be transitions on `[data-open]`; they are Motion's
+     now, because opening is a chain — seal, then flap, then the paper leaving —
+     and a CSS transition has no completion for the next link to hang off. The
+     rules were not merely moved but deleted: a stylesheet that also writes
+     `transform` on an element Motion is animating is the exact fight the
+     `card-fade` split further up this file exists to avoid.
+
+     The flap's height is a variable because the seal is centred on its point,
+     and two hardcoded 130s that must agree is how that stops being true. */
+  .envelope {
+    --envelope-w: min(92vw, 520px);
+    --flap-h: 130px;
+    --seal-size: clamp(46px, 8.5vw, 60px);
+    width: var(--envelope-w);
+  }
+  .envelope-flap {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 0;
+    border-left: calc(var(--envelope-w) / 2) solid transparent;
+    border-right: calc(var(--envelope-w) / 2) solid transparent;
+    border-top: var(--flap-h) solid var(--color-flap);
+    transform-origin: top center;
+    filter: drop-shadow(0 6px 10px rgb(70 50 30 / 0.16));
+  }
+
+  /* ─── The seal ────────────────────────────────────────────────────────────
+     Two halves, each a whole seal clipped down the middle rather than a
+     semicircle, so the impression pressed into the wax is cut by the break
+     instead of being drawn twice. Both sit on the flap's point.
+
+     This is the page's sixth use of the accent, against the rule stated at the
+     top of this file that rations it to five. It is allowed because it is the
+     same object as the chips inside the letter — wax and stamp are one piece of
+     stationery — rather than a new thing asking for attention.
+
+     No transition here: Motion owns both halves, for the same reason it owns
+     the flap. */
+  .wax-seal {
+    position: absolute;
+    top: calc(var(--flap-h) - var(--seal-size) / 2);
+    left: 50%;
+    width: var(--seal-size);
+    height: var(--seal-size);
+    margin-left: calc(var(--seal-size) / -2);
+    pointer-events: none;
+  }
+  .wax-seal-half {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-image: radial-gradient(
+      circle at 38% 32%,
+      color-mix(in srgb, var(--color-accent) 82%, white),
+      var(--color-accent) 55%,
+      var(--color-accent-strong) 100%
+    );
+    box-shadow:
+      inset 0 0 0 3px rgb(255 255 255 / 0.13),
+      inset 0 -2px 5px rgb(70 50 30 / 0.3),
+      0 4px 9px -4px rgb(70 50 30 / 0.55);
+  }
+
+  /* ─── The word being read ─────────────────────────────────────────────────
+     A <mark> is bright yellow by default, which on this paper is the single
+     most out-of-place colour a browser can produce. The accent at low alpha
+     instead — a marker pen on a letter, which is the object this is.
+
+     Nothing here transitions, and that is not an oversight: the mark has to sit
+     under the word being spoken. Anything eased arrives after the voice has
+     moved on, which reads as lag rather than as smoothness. There is no
+     reduced-motion guard below because there is no motion to guard. */
+  .letter-mark {
+    background-color: var(--color-highlight);
+    color: var(--color-ink-strong);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* ─── The gate ────────────────────────────────────────────────────────────
+     A dark surround with the picture lit inside it — the one place on the page
+     allowed to go darker than the ink, because it is a screen rather than a
+     sheet of paper.
+
+     `isolation` is load-bearing, not tidiness. The page root is `relative` with
+     `z-index: auto`, which is not a stacking context — so without isolation the
+     grain's blend mode reaches straight past the gate and hazes the paper
+     behind the whole section.
+
+     Safari ignores an ancestor's radius when it clips a composited <video>, so
+     the radius is repeated on the video itself and the mask below forces a
+     clip the compositor honours. Promoting this element with translateZ would
+     also fix the clip, but it is the exact combination where Safari's blend
+     modes misbehave — so: mask, not transform. */
+  .film-gate {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: var(--radius-gate);
+    background-color: var(--color-gate);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
+
+  /* The picture. The grade is what a warm stock under a tungsten lamp does:
+     pull the greens, drop the saturation, lift the whole frame a touch. The
+     resting scale is the weave's overscan, held even while stopped so the
+     image does not pop by a pixel every time the reel starts. */
+  .film-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-gate);
+    background-color: var(--color-gate);
+    object-fit: cover;
+    transform: scale(1.014);
+    filter: sepia(0.28) saturate(0.72) contrast(1.06) brightness(1.04);
+  }
+
+  /* Everything stacked over the picture. None of it takes a click. */
+  .film-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Lifted blacks. `lighten` keeps the brighter of the two per channel, so
+     anything darker than this brown becomes it and anything brighter is left
+     alone — which is the shape of film's toe, and the page's "never black"
+     rule applied to light instead of ink. */
+  .film-lift {
+    background-color: rgb(92 68 42 / 0.19);
+    mix-blend-mode: lighten;
+  }
+
+  /* Halation: a gate is brighter in the middle, and warm highlights bloom into
+     the emulsion around them. */
+  .film-halation {
+    background-image: radial-gradient(
+      ellipse 72% 58% at 50% 42%,
+      rgb(247 230 189 / 0.22),
+      transparent 70%
+    );
+    mix-blend-mode: screen;
+  }
+
+  /* Grain, monochrome on purpose. feTurbulence generates independent noise per
+     channel — including alpha — which reads as a digital sensor rather than
+     film. The explicit matrix averages RGB to grey and its last row pins alpha
+     to a constant 1; `saturate(0)` alone leaves the alpha channel noisy, and
+     the uneven density that produces looks like dirt on the lens instead of
+     grain in the stock. `stitchTiles` is what stops the tile seaming.
+
+     soft-light rather than overlay: overlay pivots hard at mid-grey, which is
+     where a warm low-contrast frame almost entirely lives, so it crushes the
+     shadows and pushes the saturation. soft-light has no pivot and holds hue —
+     the difference between emulsion and a filter. */
+  .film-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    mix-blend-mode: soft-light;
+  }
+
+  .film-flicker {
+    background-color: var(--color-lamp);
+    opacity: 0.05;
+    mix-blend-mode: soft-light;
+  }
+
+  .film-vignette {
+    background-image: radial-gradient(
+      ellipse 76% 76% at 50% 48%,
+      transparent 42%,
+      rgb(25 21 16 / 0.5)
+    );
+  }
+
+  /* ─── The lamp ────────────────────────────────────────────────────────────
+     Light thrown past the edges of the frame onto the paper around it. Out
+     while the reel is stopped, up to heat over 700ms when it runs, then
+     breathing. It sits behind the gate and is blurred well past its own box,
+     so it reads as spill rather than as a border.
+
+     The breathe is delayed by exactly the warm-up, and its fill-mode is the
+     default `none`, so the transition owns the first 700ms unopposed and the
+     animation takes over afterwards. Two rules on one property, without a
+     fight. */
+  .lamp-spill {
+    position: absolute;
+    inset: -18%;
+    border-radius: 50%;
+    /* The stops are pushed right out to the rim on purpose. The gate covers
+       the middle of this ellipse, so the only part anyone ever sees is the ring
+       past its edge — which sits at about 74% of the radius. A gradient that
+       has already faded out by then is a glow nobody can see. */
+    background-image: radial-gradient(
+      ellipse at center,
+      rgb(227 172 102 / 0.52) 0 52%,
+      rgb(227 172 102 / 0.38) 74%,
+      rgb(227 172 102 / 0.15) 89%,
+      transparent 100%
+    );
+    opacity: 0;
+    filter: blur(34px);
+    pointer-events: none;
+  }
+  [data-running] .lamp-spill {
+    opacity: 1;
+  }
+
+  /* ─── The film path ───────────────────────────────────────────────────────
+     The reel's transport. Picture is pulled through a projector by sprocket
+     perforations, so the thing you drag to wind the reel is a perforated
+     strip — the only scrubber that belongs on this page. Deliberately quiet:
+     the boldness budget is spent on the lamp.
+
+     The perfs are one 9px row rather than full-height bars, which is what the
+     background-size and 50% position are for. */
+  .film-path {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+    background-color: var(--color-emulsion);
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0 10px,
+      var(--color-gate) 10px 17px,
+      transparent 17px 27px
+    );
+    background-repeat: repeat-x;
+    background-position: 0 50%;
+    background-size: 100% 9px;
+    box-shadow: inset 0 1px 3px rgb(70 50 30 / 0.28);
+  }
+
+  /* ─── The optical track ───────────────────────────────────────────────────
+     On a film print the sound is a variable-area stripe printed beside the
+     picture and read by a lamp. So the audio component's scrubber is not a
+     progress bar with a waveform drawn on it — it is the waveform, and the
+     playhead is the lamp reading it. */
+  .optical-bed {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+    background-color: var(--color-emulsion);
+    background-image: linear-gradient(180deg, rgb(70 50 30 / 0.04), rgb(70 50 30 / 0.13));
+    box-shadow: inset 0 1px 3px rgb(70 50 30 / 0.28);
+  }
+  .optical-wave {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .optical-wave-dim {
+    fill: rgb(60 46 30 / 0.4);
+  }
+  .optical-wave-lit {
+    fill: var(--color-lamp-warm);
+  }
+
+  /* Exposed against unexposed. Both strips read the same `--played`, written
+     once per frame straight to the node by useMediaTransport — so progress
+     costs one custom-property write, never a re-render and never a redrawn
+     600-point path. */
+  .track-lit {
+    clip-path: inset(0 calc((1 - var(--played, 0)) * 100%) 0 0);
+  }
+
+  /* The reading lamp, on both strips.
+
+     A full-width element slid by a percentage of *its own* box, rather than a
+     thin one positioned with `left`. Percentage translateX resolves against the
+     element's own border box, so this is a compositor transform with no layout
+     — where `left: %` would cost a reflow on every one of sixty frames a
+     second. It doubles as the exposed tint for free: everything behind it has
+     been read. */
+  .lamp-line {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 100%;
+    transform: translateX(calc((var(--played, 0) - 1) * 100%));
+    pointer-events: none;
+  }
+  .lamp-line::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    right: 0;
+    bottom: -2px;
+    width: 2px;
+    background-color: var(--color-lamp);
+    box-shadow: 0 0 7px 1px rgb(247 230 189 / 0.8);
+  }
+  .film-path .lamp-line {
+    background-color: rgb(227 172 102 / 0.26);
+  }
+
+  /* ─── Seeking ─────────────────────────────────────────────────────────────
+     A real range input, stretched invisibly over the strip it scrubs.
+
+     This is the accessible control and the mouse/touch surface at once. A div
+     with role="slider" would have needed hand-rolled arrow, Home, End and drag
+     handling — and iOS VoiceOver's adjust gesture still would have done
+     nothing, because it dispatches increment/decrement actions a div cannot
+     receive. A native range answers all of that, and since the visible strip is
+     drawn separately there is no styling left to fight.
+
+     The thumb is 1px wide so value maps linearly from edge to edge; a default
+     thumb would inset the travel by half its width at each end. `touch-action`
+     is what stops a touch drag scrolling the page and cancelling the gesture. */
+  .seek-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    appearance: none;
+    background: transparent;
+    opacity: 0;
+    cursor: pointer;
+    touch-action: none;
+  }
+  .seek-input::-webkit-slider-thumb {
+    width: 1px;
+    height: 100%;
+    appearance: none;
+  }
+  .seek-input::-moz-range-thumb {
+    width: 1px;
+    height: 100%;
+    border: 0;
+  }
+
+  /* The input is invisible, so its focus ring has to land on the strip. Same
+     treatment as the global :focus-visible rule, just relocated. */
+  .film-path:has(.seek-input:focus-visible),
+  .optical-bed:has(.seek-input:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lamp-spill {
+      transition: opacity 700ms var(--ease-lamp);
+    }
+    [data-running] .lamp-spill {
+      animation: var(--animate-breathe);
+    }
+    [data-running] .film-image {
+      animation: var(--animate-weave);
+    }
+    [data-running] .film-grain {
+      animation: var(--animate-grain);
+    }
+    [data-running] .film-flicker {
+      animation: var(--animate-flicker);
+    }
+  }
+
+  /* ─── Above the page ──────────────────────────────────────────────────────
+     Four layers, and they are the whole z-index vocabulary of the site. They
+     are written down here because until the lightbox arrived the ceiling was a
+     bare `z-50` on two unrelated things and the next person to add an overlay
+     would have had nothing to read.
+
+       z-50    page chrome — the language switcher, the album's paging halves
+       z-[80]  the lightbox scrim
+       z-[90]  the lightbox itself
+       z-[100] the cursor, which must sit over everything including the scrim
+               because it is the pointer
+
+     Nothing else on the page is allowed a stacking order. The gate's `z-index:
+     1` and the crease's `z-40` are local to their own isolated contexts and do
+     not compete here. */
+
+  /* The scrim. A blur as well as a wash, because the blur is what says the
+     background is dismissable rather than merely dimmed — and because a
+     dimmed-but-sharp page behind a photograph reads as two photographs. */
+  .lightbox-scrim {
+    background-color: var(--color-scrim);
+    backdrop-filter: blur(3px) saturate(0.9);
+  }
+
+  /* The overlay's own fade, in and out.
+
+     It is here rather than in the component because Motion cannot be trusted
+     with this particular exit — see the note atop `components/modal.tsx` — and
+     because CSS can do it without any state at all. `@starting-style` supplies
+     the first frame for an element that has only just been inserted, which is
+     the one thing a plain transition cannot do; `data-leaving` supplies the
+     last, during the window the component keeps it mounted for.
+
+     The 240ms is duplicated as EXIT_MS in modal.tsx. Change one and change the
+     other, or the overlay is removed mid-fade. */
+  .lightbox-overlay {
+    opacity: 1;
+  }
+  .lightbox-overlay[data-leaving] {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .lightbox-overlay {
+      transition: opacity 240ms ease;
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+
+  /* A plate on the contact strip: a frame of film stock with the sprocket rail
+     down both edges, matching `.optical-bed`'s material rather than inventing
+     a new one. The rail is drawn rather than imaged so it survives any size. */
+  .plate-frame {
+    background-color: var(--color-emulsion);
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        var(--color-perf) 0 3px,
+        transparent 3px 9px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        var(--color-perf) 0 3px,
+        transparent 3px 9px
+      );
+    background-size:
+      3px 100%,
+      3px 100%;
+    background-position:
+      left center,
+      right center;
+    background-repeat: no-repeat;
+    box-shadow: var(--shadow-tape);
+  }
+
+  /* The photograph the cursor carries. Paper stock and a polaroid's shadow, so
+     it reads as a print held up beside the pointer rather than a tooltip. */
+  .cursor-photo {
+    background-color: var(--color-paper-card);
+    box-shadow: var(--shadow-polaroid);
+  }
+}
+
+/* ============================================================================
+   Lao metrics — deliberately unlayered.
+
+   These have to beat the `text-*` utilities that set the Latin leading, and an
+   unlayered rule outranks everything inside a @layer regardless of order.
+
+   Why they are needed: Lao stacks vowels above the consonant and tone marks
+   above those, so a line box needs real vertical room. The tight leading that
+   makes Caveat sit well — 0.92 on the 132px title — clips those marks outright
+   and collides consecutive lines. Negative tracking does the same horizontally
+   to the subscript forms. Latin loses nothing here because the rules only
+   apply while <html lang="lo">, which the font preloader maintains.
+   ============================================================================ */
+:lang(lo) .text-display {
+  line-height: 1.25;
+  letter-spacing: normal;
+}
+:lang(lo) .text-album,
+:lang(lo) .text-cover {
+  line-height: 1.3;
+}
+:lang(lo) .text-plate,
+:lang(lo) .text-card-title {
+  line-height: 1.35;
+}
+:lang(lo) .text-ask {
+  line-height: 1.45;
+}
+:lang(lo) .text-note,
+:lang(lo) .text-endpaper {
+  line-height: 1.6;
+}
+/* The letter runs to several paragraphs, so unlike the title — where a clipped
+   tone mark happens once — leading that is slightly tight here collides on
+   every line, all the way down. */
+:lang(lo) .text-letter {
+  line-height: 2.05;
+}
