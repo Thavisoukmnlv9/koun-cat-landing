@@ -15,6 +15,15 @@ import { SeekInput } from './seek-input'
  *
  * `surfaceRef` is where useMediaTransport writes `--played`; the lamp and the
  * exposed tint below inherit it rather than being told about it separately.
+ *
+ * The input is a sibling of the strip rather than a child of it. `.film-path`
+ * is `overflow: hidden` — it has to be, the exposed tint is a full-width layer
+ * clipped to the strip — and a child that grows to a 44px touch target inside
+ * it is clipped straight back to the strip's 28px. Nothing about the layout
+ * shows it: the box still measures 44, it just stops receiving anything below
+ * the fold of the clip. So the input moves out, the ref stays on the strip
+ * where `--played` is read, and `.film-path:has(+ .seek-input:focus-visible)`
+ * in globals.css puts the focus ring back on the strip.
  */
 export function FilmPath({
   surfaceRef,
@@ -34,8 +43,11 @@ export function FilmPath({
   className?: string
 }) {
   return (
-    <div ref={surfaceRef} className={cn('film-path h-7 w-full select-none', className)}>
-      <div aria-hidden className="lamp-line" />
+    <div className={cn('relative w-full select-none', className)}>
+      <div ref={surfaceRef} className="film-path h-7 w-full">
+        <div aria-hidden className="lamp-line" />
+      </div>
+
       <SeekInput
         permille={permille}
         label={label}

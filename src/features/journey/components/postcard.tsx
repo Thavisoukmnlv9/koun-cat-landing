@@ -85,10 +85,6 @@ export function Postcard({ card }: { card: PostcardRecord }) {
           inert={flipped}
           className="card-front shadow-card relative px-5 pt-5 pb-6 backface-hidden"
         >
-          {card.tapes.map((tape, index) => (
-            <WashiTape key={index} tape={tape} />
-          ))}
-
           {/* The window the print sits in. Plain box, no transform of its own —
               it exists to clip, so that the print has room to move. */}
           <div className="aspect-photo bg-photo-bed relative w-full overflow-hidden">
@@ -104,6 +100,18 @@ export function Postcard({ card }: { card: PostcardRecord }) {
               <motion.div style={{ opacity: wash }} className="photo-wash size-full" />
             </div>
           </div>
+
+          {/* Below the window in the source, and so above it on the screen.
+              The strips overhang the card's top edge by 12-15px and the window
+              begins 20px in, so the last few px of every strip lie over the
+              photograph — and the moment that window became a positioned box,
+              paint order between the two stopped being "absolute wins" and
+              became "later in the document wins". Tape that a photograph
+              covers is not tape. Moving the map is the whole fix; the z-index
+              vocabulary at the foot of globals.css stays closed. */}
+          {card.tapes.map((tape, index) => (
+            <WashiTape key={index} tape={tape} />
+          ))}
 
           <div className="font-label text-label tracking-date text-muted-label mt-4 flex items-baseline justify-between gap-3 uppercase">
             <span>{t(card.keys.date)}</span>

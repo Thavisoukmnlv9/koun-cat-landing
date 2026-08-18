@@ -39,7 +39,7 @@ export function TimelineSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] })
 
   return (
-    <section ref={ref} className="max-w-page relative mx-auto px-[clamp(14px,4vw,24px)] pb-10">
+    <section ref={ref} className="max-w-page relative mx-auto px-[clamp(14px,6vw,56px)] pb-10">
       <div
         aria-hidden
         className="border-rule absolute top-0 bottom-[clamp(64px,12vw,120px)] left-1/2 w-0 border-l border-dashed"

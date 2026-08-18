@@ -49,7 +49,14 @@
      the reel's run control — which earns it by being the same kind of object
      as the album's next button, the one control that advances the thing.
      Spend it anywhere else and the page stops looking hand-made. The reel's
-     other highlights are lamp amber, which is light rather than ink. */
+     other highlights are lamp amber, which is light rather than ink.
+
+     One thing has since been added to the list, and it is written down here
+     rather than quietly taken: the thread that draws down the timeline as you
+     scroll, at 30% over the dashed rule. It is the only mark on the page that
+     says "you are here", it is the accent's job to carry emphasis, and the
+     dashed brown underneath it is the only other candidate — which would have
+     made a drawn thread indistinguishable from an undrawn one. */
   --color-accent: #b4523f;
   --color-accent-strong: #8f3c2c;
 
@@ -413,11 +420,22 @@
      alternation either side of the spine is the point of the timeline, and a
      card small enough to lean freely at 320px would be too small to read.
 
-     Full lean from 640px up, a third of it at 320px, and a straight ramp
-     between the two. It lives here rather than in @theme because nothing
-     generates a utility from it; `.card-tilt` is its only reader. */
+     The lean is not free until about 760px, which is later than it looks like
+     it should be. Between roughly 640 and 1085 the section has stopped growing
+     with the viewport — the card is capped at 430px, the page at 1040px — so
+     the gutter is the only thing holding the swing, and the swing at a full 7
+     degrees is nearly 39px. Above 1085 the centred page leaves margin outside
+     the section and the constraint disappears; below 640 the card is small
+     enough for the ramp to have already cut it down. It is the middle that
+     bites, and it bit before any of this was scaled at all: at 768px the
+     original page clipped all ten cards on the left, and nobody noticed
+     because `overflow-x-hidden` on the page root swallows the evidence.
+
+     A third of the lean at 320px, all of it from 760px, a straight ramp
+     between. It lives here rather than in @theme because nothing generates a
+     utility from it; `.card-tilt` is its only reader. */
   :root {
-    --tilt-scale: clamp(0.35, calc((100vw - 300px) / 340px), 1);
+    --tilt-scale: clamp(0.35, calc((100vw - 300px) / 460px), 1);
   }
 
   /* One visible focus treatment for every interactive element. The accent
@@ -658,7 +676,7 @@
      and two hardcoded 130s that must agree is how that stops being true. */
   .envelope {
     --envelope-w: min(92vw, 520px);
-    --flap-h: clamp(92px, 25vw, 130px);
+    --flap-h: calc(var(--envelope-w) * 0.25);
     --seal-size: clamp(46px, 8.5vw, 60px);
     width: var(--envelope-w);
   }
@@ -974,7 +992,14 @@
     background: transparent;
     opacity: 0;
     cursor: pointer;
-    touch-action: none;
+    /* `pan-y`, not `none`. The horizontal axis belongs to the scrubber — a drag
+       across the strip must not also scroll the page, or the gesture cancels
+       halfway through. The vertical axis belongs to the page, and giving it
+       away is how a 900px-wide, 44px-tall band across a phone screen becomes
+       something you cannot scroll past. A diagonal drag now sometimes reads as
+       a scroll rather than a scrub, which is the right way round to be wrong
+       on a control this size. */
+    touch-action: pan-y;
   }
   .seek-input::-webkit-slider-thumb {
     width: 1px;
@@ -989,7 +1014,7 @@
 
   /* The input is invisible, so its focus ring has to land on the strip. Same
      treatment as the global :focus-visible rule, just relocated. */
-  .film-path:has(.seek-input:focus-visible),
+  .film-path:has(+ .seek-input:focus-visible),
   .optical-bed:has(.seek-input:focus-visible) {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
