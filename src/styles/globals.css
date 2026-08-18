@@ -97,7 +97,12 @@
   --text-plate: clamp(26px, 3.4vw, 38px); /* album plate titles */
   --text-plate--line-height: 1.05;
 
-  --text-card-title: 34px; /* postcard titles */
+  /* The two sizes below are clamped like every other display size, but they
+     were the last to be: Caveat at a flat 34px on a card that is 282px wide at
+     320px viewport ran the title onto three lines and pushed the caption off
+     the bottom. The floors are set where the handwriting still reads as
+     handwriting rather than as small text. */
+  --text-card-title: clamp(26px, 7.6vw, 34px); /* postcard titles */
   --text-card-title--line-height: 1.05;
 
   --text-note: clamp(22px, 3vw, 27px); /* the handwriting on a card's back */
@@ -106,7 +111,7 @@
   --text-endpaper: clamp(20px, 2.6vw, 29px);
   --text-endpaper--line-height: 1.35;
 
-  --text-polaroid: 26px; /* polaroid caption, closing line */
+  --text-polaroid: clamp(21px, 5.8vw, 26px); /* polaroid caption, closing line */
 
   --text-lead: clamp(18px, 2.4vw, 22px); /* the intro under the title */
   --text-lead--line-height: 1.55;
@@ -400,6 +405,21 @@
     @apply bg-paper text-ink text-prose;
   }
 
+  /* How much of its authored lean a postcard is allowed at this width.
+     A card that fills a phone's screen cannot lean 7 degrees: the bounding box
+     of a card W wide and H tall at angle t is W*cos(t) + H*sin(t), which at
+     320px works out to roughly 32px of overhang per side and clipped ten cards
+     at both edges. So the lean is scaled rather than the card shrunk — the
+     alternation either side of the spine is the point of the timeline, and a
+     card small enough to lean freely at 320px would be too small to read.
+
+     Full lean from 640px up, a third of it at 320px, and a straight ramp
+     between the two. It lives here rather than in @theme because nothing
+     generates a utility from it; `.card-tilt` is its only reader. */
+  :root {
+    --tilt-scale: clamp(0.35, calc((100vw - 300px) / 340px), 1);
+  }
+
   /* One visible focus treatment for every interactive element. The accent
      carries emphasis everywhere else on the page, so it carries focus too. */
   :focus-visible {
@@ -599,7 +619,7 @@
      and two hardcoded 130s that must agree is how that stops being true. */
   .envelope {
     --envelope-w: min(92vw, 520px);
-    --flap-h: 130px;
+    --flap-h: clamp(92px, 25vw, 130px);
     --seal-size: clamp(46px, 8.5vw, 60px);
     width: var(--envelope-w);
   }
