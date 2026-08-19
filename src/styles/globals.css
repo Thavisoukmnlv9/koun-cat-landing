@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "./fonts.css";
+@import "./design-fonts.css";
+@import "./designs.css";
 
 /* ============================================================================
    OUR JOURNEY — design tokens

@@ -1,0 +1,287 @@
+/* ============================================================================
+   THE FIVE DESIGNS — scoped palettes and materials
+
+   The journey page is one material: warm paper, one burnt red, three voices of
+   type. These five are not, and must not leak into it. So nothing here goes in
+   `@theme` — every token is scoped under the design that owns it, and the
+   `@theme` block in globals.css stays exactly the palette of the page it was
+   written for. `globals.css` enumerates the six things allowed to use the
+   accent; none of these are among them.
+
+   Each block below is one prototype's `:root`, verbatim, renamed to `--d-*`.
+   The font stacks are the other half: every one ends in "Noto Sans", which is
+   what lets a Lao reader see any of these designs at all. See design-fonts.css.
+   ============================================================================ */
+
+@layer components {
+  /* ─── Type, by role rather than by name ────────────────────────────────
+     A component asks for the display voice; which face that is depends on
+     which design it is inside. Same idea as journey's --font-hand/-label/-body,
+     one level of indirection further out. */
+  .d-display {
+    font-family: var(--d-display);
+  }
+  .d-body {
+    font-family: var(--d-body);
+  }
+  .d-label {
+    font-family: var(--d-label);
+  }
+  .d-hand {
+    font-family: var(--d-hand);
+  }
+  .d-script {
+    font-family: var(--d-script);
+  }
+
+  /* Horizontal rails: the tab bar and the film strip. */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ══ I · FILMSTRIP ═════════════════════════════════════════════════════ */
+  .d-filmstrip {
+    --d-espresso: #17100c;
+    --d-oxblood: #241611;
+    --d-plate: #2c1c15;
+    --d-gold: #c8a24b;
+    --d-gold-soft: #e4c988;
+    --d-cream: #efe6d4;
+    --d-coral: #e8785a;
+    --d-ink: #0d0906;
+
+    --d-display: 'Cormorant Garamond', 'Noto Sans', Georgia, serif;
+    --d-body: 'EB Garamond', 'Noto Sans', Georgia, serif;
+    --d-label: 'Space Mono', 'Noto Sans', monospace;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Cormorant Garamond', 'Noto Sans', Georgia, serif;
+
+    background:
+      radial-gradient(120% 60% at 50% -10%, var(--d-oxblood), transparent 55%), var(--d-espresso);
+  }
+
+  /* Fractal noise, jittered. The keyframes are journey's `--animate-grain`,
+     which already exists for the reel and does exactly this. */
+  .d-grain {
+    opacity: 0.06;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .d-grain {
+      animation: var(--animate-grain);
+    }
+  }
+
+  /* Sprocket holes: one repeating gradient per edge, plus the film's own stock
+     colour behind them. */
+  .d-film {
+    background: var(--d-plate);
+    border-top: 26px solid transparent;
+    border-bottom: 26px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  .d-film::before,
+  .d-film::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 26px;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 20px, var(--d-ink) 20px 34px), #3a2519;
+  }
+  .d-film::before {
+    top: -26px;
+  }
+  .d-film::after {
+    bottom: -26px;
+  }
+
+  /* Frames leave the strip rather than stopping at its edge. */
+  .d-reel-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  /* Film stock, not a photograph: warmed, slightly flattened, slightly desaturated. */
+  .d-film-look {
+    filter: sepia(0.28) contrast(1.04) saturate(0.92);
+  }
+
+  /* ══ II · POSTCARDS ════════════════════════════════════════════════════ */
+  .d-postcards {
+    --d-paper: #f4ece0;
+    --d-paper-2: #ece1d0;
+    --d-ink: #2a2320;
+    --d-red: #b23a48;
+    --d-blue: #1d3b6e;
+    --d-gold: #b98a2e;
+    --d-sky: #7ba0b8;
+    --d-shadow: rgb(58 44 32 / 0.22);
+    --d-line: rgb(42 35 32 / 0.14);
+
+    --d-display: 'Fraunces', 'Noto Sans', Georgia, serif;
+    --d-body: 'Karla', 'Noto Sans', system-ui, sans-serif;
+    --d-label: 'Karla', 'Noto Sans', system-ui, sans-serif;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Caveat', 'Noto Sans', cursive;
+
+    --d-bg: var(--d-paper);
+    background:
+      radial-gradient(90% 50% at 50% 0%, #f8f2e8, transparent 60%),
+      repeating-linear-gradient(45deg, transparent 0 6px, rgb(0 0 0 / 0.012) 6px 12px),
+      var(--d-paper-2);
+  }
+
+  /* The only place the red and the blue meet. */
+  .d-airmail {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--d-red) 0 14px,
+      transparent 14px 28px,
+      var(--d-blue) 28px 42px,
+      transparent 42px 56px
+    );
+  }
+
+  /* ══ III · MAP ═════════════════════════════════════════════════════════ */
+  .d-map {
+    --d-parch: #ece3cf;
+    --d-parch-d: #e2d6bb;
+    --d-sepia: #8a6d3b;
+    --d-forest: #2f4a3c;
+    --d-forest-2: #3f5e4c;
+    --d-gold: #a9852f;
+    --d-ink: #33291b;
+    --d-sky: #6a8caf;
+    --d-card: #fbf5e6;
+
+    --d-display: 'Cinzel', 'Noto Sans', Georgia, serif;
+    --d-body: 'Spectral', 'Noto Sans', Georgia, serif;
+    --d-label: 'JetBrains Mono', 'Noto Sans', monospace;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Cinzel', 'Noto Sans', Georgia, serif;
+
+    --d-bg: var(--d-parch);
+  }
+
+  /* Aged paper: fractal noise pushed through a sepia matrix. */
+  .d-parchment {
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/><feColorMatrix type='matrix' values='0.4 0 0 0 0.55  0 0.35 0 0 0.48  0 0 0.25 0 0.35  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  }
+
+  .d-compass {
+    background: radial-gradient(circle at 50% 45%, #fbf5e6, #e6dbc0);
+    border: 2px solid var(--d-gold);
+    box-shadow: 0 4px 14px rgb(51 41 27 / 0.22);
+  }
+
+  /* ══ IV · GALLERY ══════════════════════════════════════════════════════ */
+  .d-gallery {
+    --d-linen: #efe7db;
+    --d-linen-d: #e6dccb;
+    --d-cream: #fbf7ef;
+    --d-blush: #d9a7a0;
+    --d-sage: #9fb0a0;
+    --d-butter: #e6cf94;
+    --d-gold: #b98a2e;
+    --d-charcoal: #33302b;
+    --d-tape-mint: rgb(159 176 160 / 0.55);
+    --d-tape-blush: rgb(217 167 160 / 0.5);
+    --d-tape-butter: rgb(230 207 148 / 0.55);
+
+    --d-display: 'DM Serif Display', 'Noto Sans', Georgia, serif;
+    --d-body: 'Nunito Sans', 'Noto Sans', system-ui, sans-serif;
+    --d-label: 'Nunito Sans', 'Noto Sans', system-ui, sans-serif;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Sacramento', 'Noto Sans', cursive;
+
+    --d-bg: var(--d-linen);
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / 0.012) 3px 6px),
+      repeating-linear-gradient(90deg, transparent 0 3px, rgb(0 0 0 / 0.012) 3px 6px),
+      var(--d-linen-d);
+  }
+
+  /* The lean is per-card data, not an nth-child rule — see polaroid-pin.tsx. */
+  .d-pola {
+    position: relative;
+    transform: rotate(var(--rot, 0deg));
+  }
+  .d-pola:hover,
+  .d-pola:focus-visible {
+    transform: rotate(0deg) translateY(-4px);
+    z-index: 3;
+    box-shadow: 0 16px 34px rgb(51 48 43 / 0.26);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .d-pola {
+      transition:
+        transform 0.35s var(--ease-reveal),
+        box-shadow 0.35s;
+    }
+  }
+
+  /* ══ V · LETTERS ═══════════════════════════════════════════════════════ */
+  .d-letters {
+    --d-rose: #d8a3ad;
+    --d-rose-d: #c78d99;
+    --d-rose-l: #e6bcc4;
+    --d-mauve: #a5788a;
+    --d-plum: #583349;
+    --d-plum-soft: #6f4a5f;
+    --d-cream: #faf3ea;
+    --d-cream-2: #f3e8db;
+    --d-gold: #c19a3f;
+    --d-gold-l: #e0c37f;
+
+    --d-display: 'Cormorant Garamond', 'Noto Sans', Georgia, serif;
+    --d-body: 'EB Garamond', 'Noto Sans', Georgia, serif;
+    --d-label: 'EB Garamond', 'Noto Sans', Georgia, serif;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Pinyon Script', 'Noto Sans', cursive;
+
+    --d-bg: #efd9dd;
+    background: radial-gradient(90% 55% at 50% 0%, #f6e4e7, transparent 60%), #e7c9d0;
+  }
+
+  .d-env {
+    background: linear-gradient(160deg, var(--d-rose-l), var(--d-rose) 55%, var(--d-rose-d));
+    transform-style: preserve-3d;
+  }
+
+  /* The folded pocket: two triangles clipped out of one overlay. */
+  .d-env-seam {
+    background:
+      linear-gradient(to bottom right, rgb(255 255 255 / 0.16) 0 50%, transparent 50%),
+      linear-gradient(to bottom left, rgb(0 0 0 / 0.05) 0 50%, transparent 50%);
+  }
+
+  .d-env-flap {
+    background: linear-gradient(175deg, var(--d-rose-l), var(--d-rose-d));
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    backface-visibility: hidden;
+    box-shadow: 0 2px 6px rgb(88 51 73 / 0.12);
+  }
+
+  .d-seal {
+    background: radial-gradient(circle at 36% 30%, #e07a90, #b23a5a 55%, #8e2846);
+    box-shadow: 0 3px 8px rgb(88 51 73 / 0.35);
+  }
+}
+
+/* ─── Lao ────────────────────────────────────────────────────────────────
+   The same problem globals.css solves at its foot, for the display sizes these
+   designs introduce. Lao stacks its vowels and tone marks above and below the
+   consonant, so the tight leading a Latin display face is set at will collide.
+   Every one of these is a heading; none of them is prose. */
+:lang(lo) .d-display,
+:lang(lo) .d-script {
+  line-height: 1.5;
+}

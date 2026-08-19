@@ -1,3 +1,4 @@
+import type { designsI18n } from '@/features/designs/i18n'
 import type { journeyI18n } from '@/features/journey/i18n'
 
 /**
@@ -12,6 +13,7 @@ declare module 'i18next' {
     defaultNS: 'journey'
     resources: {
       journey: (typeof journeyI18n)['resources']['en']
+      designs: (typeof designsI18n)['resources']['en']
     }
   }
 }

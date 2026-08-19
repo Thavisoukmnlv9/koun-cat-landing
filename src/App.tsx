@@ -2,11 +2,16 @@ import { MotionConfig } from 'motion/react'
 
 import { I18nProvider } from '@/app/providers/i18n-provider'
 import { PhotoCursor } from '@/components/photo-cursor'
-import { JourneyPage } from '@/features/journey/journey-page'
+import { DesignsPage } from '@/features/designs/designs-page'
 
 /**
  * Composition root. The site is a single static page, so there is no router,
  * no data layer, and no auth — just the i18n provider around the page.
+ *
+ * That page is now `DesignsPage`, a tab bar over six of them: the finished
+ * journey and the five design variants it is being weighed against. The tab
+ * lives in `location.hash`, which is as much routing as comparing six layouts
+ * needs — no dependency, and each design is still a link you can send.
  *
  * `MotionConfig reducedMotion="user"` is the JavaScript counterpart of the
  * `@media (prefers-reduced-motion: no-preference)` guard that wraps every
@@ -23,7 +28,7 @@ export function App() {
   return (
     <MotionConfig reducedMotion="user">
       <I18nProvider>
-        <JourneyPage />
+        <DesignsPage />
         <PhotoCursor />
       </I18nProvider>
     </MotionConfig>
