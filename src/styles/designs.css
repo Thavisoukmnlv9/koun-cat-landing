@@ -42,6 +42,52 @@
     display: none;
   }
 
+  /* ══ 0 · HOME ═════════════════════════════════════════════════════════
+     The specimen sheet. Not an eleventh design — the cover of the other
+     eleven — so it borrows the site's own voices rather than introducing new
+     ones, and its ground is journey's paper. The sticky tab bar above it is
+     `bg-paper/85`; anything darker here would meet that bar in a hard seam and
+     read as another variant.
+
+     Its accent is deliberately NOT journey's burnt red. globals.css rations
+     that colour to six things and writes each of them down; spending it on a
+     cover would be a seventh. Gold instead — which is the one colour nearly
+     every design on the sheet already contains (the filmstrip's, the map's,
+     the album's, the constellation's, the exhibition's brass), so the sheet is
+     bound in the colour its contents share. */
+  .d-home {
+    --d-paper: #efe7d7;
+    --d-ink: #5a5142;
+    --d-ink-strong: #2e2921;
+    --d-muted: #9c8a6e;
+    --d-accent: #a5813a;
+    --d-rule: rgb(150 128 96 / 0.45);
+
+    --d-display: 'Cormorant Garamond', 'Noto Sans', Georgia, serif;
+    --d-body: 'EB Garamond', 'Noto Sans', Georgia, serif;
+    --d-label: 'Courier Prime', 'Noto Sans', monospace;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Pinyon Script', 'Noto Sans', cursive;
+
+    --d-bg: var(--d-paper);
+    background: radial-gradient(110% 55% at 50% -8%, #f7f0e1, transparent 60%), var(--d-paper);
+  }
+
+  /* Journey's three voices, in the same shape as the ten below it.
+
+     The journey page has no scope class of its own and does not want one — its
+     palette IS the theme in globals.css. This block exists for exactly one
+     element: its tile on the specimen sheet, which has to be able to ask for
+     "this design's display face" like every other tile. Variables only, and no
+     background, so it cannot tint anything it is put on. */
+  .d-journey {
+    --d-display: 'EB Garamond', 'Noto Sans', Georgia, serif;
+    --d-body: 'EB Garamond', 'Noto Sans', Georgia, serif;
+    --d-label: 'Courier Prime', 'Noto Sans', monospace;
+    --d-hand: 'Caveat', 'Noto Sans', cursive;
+    --d-script: 'Caveat', 'Noto Sans', cursive;
+  }
+
   /* ══ I · FILMSTRIP ═════════════════════════════════════════════════════ */
   .d-filmstrip {
     --d-espresso: #17100c;

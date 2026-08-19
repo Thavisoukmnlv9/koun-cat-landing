@@ -7,6 +7,7 @@ import { ConstellationDesign } from '../constellation/constellation-design'
 import { ExhibitionDesign } from '../exhibition/exhibition-design'
 import { FilmstripDesign } from '../filmstrip/filmstrip-design'
 import { GalleryDesign } from '../gallery/gallery-design'
+import { HomeDesign } from '../home/home-design'
 import { LettersDesign } from '../letters/letters-design'
 import { MapDesign } from '../map/map-design'
 import { MixtapeDesign } from '../mixtape/mixtape-design'
@@ -14,6 +15,7 @@ import { PostcardsDesign } from '../postcards/postcards-design'
 import { StorybookDesign } from '../storybook/storybook-design'
 
 export type DesignId =
+  | 'home'
   | 'journey'
   | 'filmstrip'
   | 'postcards'
@@ -35,7 +37,8 @@ export interface DesignEntry {
    */
   labelKey: `tabs.${DesignId}`
   /**
-   * How many memories this design shows.
+   * How many memories this design shows. Zero for home, which shows one plate
+   * per design rather than a reading of the archive.
    *
    * Not a style choice — each prototype was composed for a particular count,
    * and the wall was the only one built to hold eight. Journey ignores it and
@@ -50,13 +53,15 @@ export interface DesignEntry {
 }
 
 /**
- * The eleven tabs, in the order the hub page listed them.
+ * The twelve tabs, in the order the hub page listed them.
  *
- * Journey comes first because it is the finished page and the thing the other
- * ten are alternatives to — and because putting it anywhere else would make the
- * default view a prototype.
+ * Home comes first and is the default, because eleven designs behind a bar of
+ * eleven bare words is not a way in — the sheet is. Journey follows, because it
+ * is the finished page and the thing the other ten are alternatives to; putting
+ * a prototype above it would make one of them look like the answer.
  */
 export const DESIGNS: readonly DesignEntry[] = [
+  { id: 'home', labelKey: 'tabs.home', memoryCount: 0, Component: HomeDesign },
   { id: 'journey', labelKey: 'tabs.journey', memoryCount: 10, Component: JourneyPage },
   { id: 'filmstrip', labelKey: 'tabs.filmstrip', memoryCount: 6, Component: FilmstripDesign },
   { id: 'postcards', labelKey: 'tabs.postcards', memoryCount: 6, Component: PostcardsDesign },
@@ -75,7 +80,7 @@ export const DESIGNS: readonly DesignEntry[] = [
   { id: 'exhibition', labelKey: 'tabs.exhibition', memoryCount: 6, Component: ExhibitionDesign },
 ]
 
-export const DEFAULT_DESIGN: DesignId = 'journey'
+export const DEFAULT_DESIGN: DesignId = 'home'
 
 /** Narrow a `location.hash` fragment to a design id. */
 export function toDesignId(value: string | undefined | null): DesignId | undefined {

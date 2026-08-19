@@ -36,6 +36,7 @@ export const lo: TranslationShape<DesignsBundle> = {
   // TODO(lo): translate this group.
   tabs: {
     label: 'Design',
+    home: 'Home',
     journey: 'Journey',
     filmstrip: 'Filmstrip',
     postcards: 'Postcards',
@@ -62,6 +63,77 @@ export const lo: TranslationShape<DesignsBundle> = {
     photoChapter: 'A photograph',
     soundChapter: 'With sound',
     filmChapter: 'Moving picture',
+  },
+
+  /** The specimen sheet — the way in. */
+  // TODO(lo): translate this group.
+  home: {
+    eyebrow: 'Specimen sheet',
+    title: 'Our Journey',
+    script: 'one archive, eleven readings',
+    lede: 'The same photographs, the same song, the same film — told eleven different ways. Open whichever one you like.',
+    open: 'Open',
+    featured: 'The finished page',
+    note: 'Every photograph on this sheet is ours, and so are the song and the film. Nothing here is a placeholder — it is one archive, read eleven ways.',
+    fin: 'for you',
+
+    designs: {
+      journey: {
+        name: 'Our Journey',
+        blurb:
+          'The finished page. Ten postcards taped down a dashed timeline, each one turning over to the note on its back.',
+      },
+      filmstrip: {
+        name: 'Filmstrip Reel',
+        blurb:
+          'Swipe the film right-to-left, or run the projector to roll it forward. Tap a frame to project it.',
+      },
+      postcards: {
+        name: 'Flip Postcards',
+        blurb:
+          "Airmail postcards you tap to flip. The photo's on the front, the whole story's handwritten on the back.",
+      },
+      map: {
+        name: 'The Map of Us',
+        blurb:
+          'Scroll down a vintage map and a golden trail draws itself, stop by stop, with a pin walking the path.',
+      },
+      gallery: {
+        name: 'Pinned & Kept',
+        blurb:
+          'A wall of taped polaroids. Tap one and it lifts off, straightens, and slowly develops into the memory.',
+      },
+      letters: {
+        name: 'Letters to You',
+        blurb:
+          'Sealed love letters. Tap one — the wax seal breaks, the flap lifts, and the letter unfolds itself.',
+      },
+      mixtape: {
+        name: 'Our Mixtape',
+        blurb:
+          'A real turntable. The record spins, the tonearm drops, and side A plays straight through while you read the sleeve.',
+      },
+      album: {
+        name: 'Keepsake Album',
+        blurb:
+          'A leather-bound book. Turn each page and it flips with a real curl, one memory pressed onto every leaf.',
+      },
+      constellation: {
+        name: 'Constellation',
+        blurb:
+          'Every memory is a star. Tap them one by one and watch the lines draw our constellation into the night sky.',
+      },
+      storybook: {
+        name: 'Storybook',
+        blurb:
+          'Full-screen chapters. Scroll and each scene glides in on parallax, the story rising over the photo like a film.',
+      },
+      exhibition: {
+        name: 'The Exhibition',
+        blurb:
+          'A gallery you swipe through in 3D. Each memory hangs framed and spotlit, with its own museum placard below.',
+      },
+    },
   },
 
   // TODO(lo): translate this group.
@@ -322,6 +394,7 @@ export const lo: TranslationShape<DesignsBundle> = {
   // TODO(lo): translate this group.
   a11y: {
     tablist: 'Choose a design',
+    openDesign: 'Open {{name}}',
     openFrame: 'Open {{title}}',
     closeFrame: 'Close',
     flipCard: 'Turn over the postcard for {{title}}',
