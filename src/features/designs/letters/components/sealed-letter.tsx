@@ -10,6 +10,18 @@ import { MediaChip } from '../../components/media-chip'
 import { FILM_SRC, type Memory } from '../../data/memories'
 
 /**
+ * The flap's height in px, and the seal's radius.
+ *
+ * Both are fixed rather than proportional, and that is the whole fix: the flap
+ * was `h-[46%]`, so its point — and the wax centred on it — moved with whatever
+ * the envelope's content happened to make it tall, and landed squarely on "To
+ * the one I love". Pinned in pixels, the seal has one home and the writing
+ * below it can simply be given room to clear.
+ */
+const FLAP_H = 150
+const SEAL_R = 31
+
+/**
  * One sealed envelope and the letter inside it.
  *
  * The prototype coupled the two with an adjacent-sibling selector —
@@ -43,55 +55,25 @@ export function SealedLetter({ memory }: { memory: Memory }) {
           aria-expanded={open}
           aria-controls={letterId}
           aria-label={td('a11y.openLetter', { place })}
-          className="d-env relative block w-full overflow-hidden rounded-[6px] px-5 pt-5 pb-6 text-left shadow-[0_12px_28px_rgb(88_51_73_/_0.2)]"
+          style={{ paddingTop: FLAP_H + SEAL_R + 18 }}
+          className="d-env relative block w-full overflow-hidden rounded-[6px] px-5 pb-6 text-left shadow-[0_12px_28px_rgb(88_51_73_/_0.2)]"
         >
-          {/* The folded pocket seams. */}
-          <span aria-hidden className="d-env-seam absolute inset-0" />
-
-          <span className="d-body relative block text-[10px] font-bold tracking-[0.16em] text-[var(--d-plum)]/60 uppercase">
-            {t(memory.keys.date)}
-          </span>
-
-          {/* The chip sits on its own row. In the prototype it was absolutely
-              positioned across the middle of the envelope and landed on top of
-              the addressee's name, leaving both unreadable. */}
-          <span className="relative mt-3 flex items-start justify-between gap-3">
-            <MediaChip
-              kind={memory.kind}
-              variant="enclosed"
-              className="d-body rounded-full bg-[var(--d-plum)] px-3 py-1 text-[10px] font-bold tracking-[0.12em] text-[var(--d-cream)] uppercase"
-            />
-            <span
-              aria-hidden
-              className="h-[46px] w-[38px] shrink-0 rotate-6 rounded-[2px] border border-dashed border-[var(--d-plum)]/35 bg-[var(--d-cream)]"
-            />
-          </span>
-
-          <span className="relative mt-6 block text-center">
-            <span className="d-body block text-[10px] font-bold tracking-[0.2em] text-[var(--d-plum)]/60 uppercase">
-              {td('letters.addrTo')}
-            </span>
-            <span className="d-script mt-0.5 block text-[34px] leading-none text-[var(--d-plum)]">
-              {td('letters.addrName')}
-            </span>
-            <span aria-hidden className="mx-auto mt-2 block h-px w-1/2 bg-[var(--d-plum)]/25" />
-          </span>
-
-          <span className="d-display relative mt-5 block text-center text-[15px] text-[var(--d-plum)]/70 italic">
-            {td('letters.tapCue')}
-          </span>
-
-          {/* The flap. `initial={false}` so a letter that mounts closed does not
-              animate shut on arrival. */}
+          {/* The folded pocket seams, and the flap over them. Both sit at z-0
+              so the writing stays on top of them — the flap is opaque and
+              covers the upper half of the envelope, and in the prototype it
+              swallowed the date and the media chip whole. */}
+          <span aria-hidden className="d-env-seam absolute inset-0 z-0" />
           <motion.span
             aria-hidden
             initial={false}
             animate={{ rotateX: open ? 178 : 0 }}
             transition={FLAP_FALL}
-            style={{ transformOrigin: 'top center' }}
-            className="d-env-flap absolute inset-x-0 top-0 h-[54%]"
+            style={{ transformOrigin: 'top center', height: FLAP_H }}
+            className="d-env-flap absolute inset-x-0 top-0 z-0"
           />
 
+          {/* Centred on the flap's point, and above everything: wax sits on top
+              of the paper it is holding shut. */}
           <motion.span
             aria-hidden
             initial={false}
@@ -99,10 +81,45 @@ export function SealedLetter({ memory }: { memory: Memory }) {
               open ? { opacity: 0, scale: 0.4, rotate: 30 } : { opacity: 1, scale: 1, rotate: 0 }
             }
             transition={SEAL_BREAK}
-            className="d-seal absolute top-[42%] left-1/2 grid size-[62px] -translate-x-1/2 place-items-center rounded-full"
+            style={{ top: FLAP_H }}
+            className="d-seal absolute left-1/2 z-20 grid size-[62px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full"
           >
             <span className="d-script text-[24px] text-[#f7dbe2]">{td('letters.seal')}</span>
           </motion.span>
+
+          <span className="absolute inset-x-5 top-5 z-10 flex items-start justify-between gap-3">
+            <span className="d-body text-[10px] font-bold tracking-[0.16em] text-[var(--d-plum)]/70 uppercase">
+              {t(memory.keys.date)}
+            </span>
+            <span
+              aria-hidden
+              className="h-[46px] w-[38px] shrink-0 rotate-6 rounded-[2px] border border-dashed border-[var(--d-plum)]/35 bg-[var(--d-cream)]"
+            />
+          </span>
+
+          <span className="relative z-10 block">
+            <span className="block text-center">
+              <span className="d-body block text-[10px] font-bold tracking-[0.2em] text-[var(--d-plum)]/70 uppercase">
+                {td('letters.addrTo')}
+              </span>
+              <span className="d-script mt-0.5 block text-[34px] leading-none text-[var(--d-plum)]">
+                {td('letters.addrName')}
+              </span>
+              <span aria-hidden className="mx-auto mt-2 block h-px w-1/2 bg-[var(--d-plum)]/25" />
+            </span>
+
+            <span className="mt-4 flex justify-center">
+              <MediaChip
+                kind={memory.kind}
+                variant="enclosed"
+                className="d-body rounded-full bg-[var(--d-plum)] px-3 py-1 text-[10px] font-bold tracking-[0.12em] text-[var(--d-cream)] uppercase"
+              />
+            </span>
+
+            <span className="d-display mt-4 block text-center text-[15px] text-[var(--d-plum)]/75 italic">
+              {td('letters.tapCue')}
+            </span>
+          </span>
         </button>
 
         {/* ── The letter ────────────────────────────────────────────────── */}

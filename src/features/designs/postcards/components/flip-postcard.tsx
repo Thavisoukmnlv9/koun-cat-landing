@@ -44,7 +44,7 @@ export function FlipPostcard({ memory }: { memory: Memory }) {
       >
         {/* ── Front ─────────────────────────────────────────────────────── */}
         <div className="absolute inset-0 flex flex-col overflow-hidden rounded-[3px] border border-[var(--d-line)] bg-[var(--d-paper)] p-2.5 shadow-[0_10px_26px_var(--d-shadow)] backface-hidden">
-          <div className="relative min-h-0 flex-1 overflow-hidden bg-[var(--color-photo-bed)]">
+          <div className="relative min-h-0 flex-1 shrink overflow-hidden bg-[var(--color-photo-bed)]">
             {memory.kind === 'film' ? (
               <video
                 src={FILM_SRC}
@@ -81,11 +81,16 @@ export function FlipPostcard({ memory }: { memory: Memory }) {
             </div>
           </div>
 
-          <div className="relative pt-3 pb-1">
+          {/* Everything here is in normal flow rather than absolutely placed.
+              The prototype hung the flip hint in the bottom-right corner, which
+              worked while every place was two short words — "The Rooftop", "By
+              the Sea". These places are real and some of them are long, and
+              "Coffee shop, downtown" ran straight through the hint. */}
+          <div className="flex shrink-0 flex-col pt-3">
             <p className="d-body text-[10px] font-bold tracking-[0.18em] text-[var(--d-blue)] uppercase">
               {td(memory.flavour.greet)}
             </p>
-            <h3 className="d-display mt-0.5 text-[26px] leading-tight font-semibold text-[var(--d-ink)] italic">
+            <h3 className="d-display mt-0.5 text-[clamp(20px,5.5vw,26px)] leading-tight font-semibold text-balance text-[var(--d-ink)] italic">
               {place}
             </h3>
 
@@ -95,7 +100,7 @@ export function FlipPostcard({ memory }: { memory: Memory }) {
               aria-controls={backId}
               aria-label={td('a11y.flipCard', { title: place })}
               onClick={() => setFlipped(true)}
-              className="d-hand absolute right-1 bottom-1 text-[17px] text-[var(--d-red)]"
+              className="d-hand mt-1 self-end text-[17px] text-[var(--d-red)]"
             >
               {td('postcards.flipHint')}
             </button>

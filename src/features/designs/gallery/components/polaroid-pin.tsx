@@ -51,7 +51,8 @@ export function PolaroidPin({
 
         <MediaChip
           kind={memory.kind}
-          className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-[var(--d-charcoal)]/70 text-[11px] text-white [&>*:last-child]:hidden"
+          iconOnly
+          className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-[var(--d-charcoal)]/70 text-[11px] text-white"
         />
 
         <span className="d-body absolute right-2 bottom-1.5 text-[10px] font-bold tracking-[0.12em] text-white/85 uppercase drop-shadow">

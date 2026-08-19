@@ -31,20 +31,33 @@ export function MediaChip({
   kind,
   variant = 'short',
   glyph = GLYPH.photo,
+  iconOnly = false,
   className,
 }: {
   kind: MemoryKind
   variant?: 'short' | 'enclosed'
   /** Override for the filmstrip, whose photo mark is a six-pointed ✷. */
   glyph?: string
+  /**
+   * Just the mark, for the wall — where eight of these tile down the page and
+   * the word would read as clutter. The label is still announced.
+   *
+   * A prop rather than the caller hiding the text with a CSS child selector,
+   * which is what this was first: `t()` returns a bare text node, so
+   * `*:last-child` matched the glyph and hid the wrong half.
+   */
+  iconOnly?: boolean
   className?: string
 }) {
   const { t } = useTranslation('designs')
 
+  const label = t(LABEL[variant][kind])
+  const mark = kind === 'photo' ? glyph : GLYPH[kind]
+
   return (
     <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap', className)}>
-      <span aria-hidden>{kind === 'photo' ? glyph : GLYPH[kind]}</span>
-      {t(LABEL[variant][kind])}
+      <span aria-hidden>{mark}</span>
+      {iconOnly ? <span className="sr-only">{label}</span> : label}
     </span>
   )
 }

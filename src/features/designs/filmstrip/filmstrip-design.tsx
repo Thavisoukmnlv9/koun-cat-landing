@@ -89,7 +89,11 @@ export function FilmstripDesign() {
           ref={reelRef}
           className="d-reel flex snap-x snap-mandatory scrollbar-none gap-0 overflow-x-auto"
         >
-          <div className="d-film flex shrink-0 gap-4 px-[calc(50vw-min(45vw,180px))] py-3">
+          {/* Half a viewport minus half a frame, so `snap-align: center` can
+                actually centre the first and last frames — and so neither of
+                them sits under the strip's edge fade, which was eating the
+                corner of frame one's slate. */}
+          <div className="d-film flex shrink-0 gap-4 px-[calc((100vw-min(74vw,360px))/2)] py-3">
             {memories.map((memory, index) => (
               <button
                 key={memory.id}
@@ -106,7 +110,11 @@ export function FilmstripDesign() {
                     priority={index === 0}
                   />
 
-                  <span className="d-label absolute top-2.5 left-2.5 border border-[var(--d-gold)]/50 px-2 py-0.5 text-[10px] tracking-[0.14em] text-[var(--d-cream)]/85">
+                  <span // Over a photograph rather than over film stock, so it carries its own
+                    // ground — the slate was unreadable wherever a frame happened to be
+                    // bright, which with real photographs is most of them.
+                    className="d-label absolute top-2.5 left-2.5 border border-[var(--d-gold)]/50 bg-[var(--d-ink)]/55 px-2 py-0.5 text-[10px] tracking-[0.14em] text-[var(--d-cream)] backdrop-blur-[2px]"
+                  >
                     FR {memory.number}
                   </span>
 
