@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,13 +23,28 @@ const COUNT = 6
  * feed `stroke-dasharray`, and re-ran the lot on `resize` — at which point every
  * line already on screen re-animated from nothing.
  *
- * Here the SVG carries `viewBox="0 0 100 100"` with `preserveAspectRatio="none"`,
- * so a star's percentage position *is* its coordinate and the box can be any
- * size at all. No measurement, no resize listener, nothing to get out of step.
- * `vector-effect="non-scaling-stroke"` keeps the hairline a hairline under the
- * non-uniform scale that buys, and Motion's `pathLength` handles the draw, so
- * the segment lengths never have to be computed either. Each line is keyed by
- * the pair it joins, so existing lines are untouched when a new one appears.
+ * Here the SVG has no `viewBox` at all and every endpoint is written as a
+ * percentage — which SVG resolves against the element's own viewport, x against
+ * its width and y against its height. So a star's position in the sky *is* its
+ * coordinate, at any size, with no measurement, no resize listener and nothing
+ * to fall out of step.
+ *
+ * Without a viewBox the user unit is the CSS pixel, which matters more than it
+ * sounds: `stroke-width` means what it says, and — with `pathLength={1}`
+ * normalising every segment to a length of one — a single `stroke-dasharray: 1`
+ * draws all of them regardless of how long they really are. An earlier pass
+ * used `viewBox="0 0 100 100"` with `preserveAspectRatio="none"`, which also
+ * avoided measuring but scaled x and y by different factors: the stroke needed
+ * `non-scaling-stroke` to stay a hairline, and that put the dash pattern in
+ * screen units while `pathLength` normalised in user units. The two disagreed
+ * and every line came out dotted.
+ *
+ * Each line is keyed by the pair it joins, so the ones already drawn are
+ * untouched when a new one appears — only the new segment animates.
+ *
+ * The draw itself is `.d-trail` in designs.css; the comment there covers why a
+ * keyframe rather than Motion, and why the line's resting state is the drawn
+ * one rather than the blank one.
  */
 export function ConstellationDesign() {
   const { t: td } = useTranslation('designs')
@@ -94,25 +108,18 @@ export function ConstellationDesign() {
 
         {/* ── The sky ────────────────────────────────────────────────── */}
         <div className="relative mt-6.5 h-[74vh] min-h-[460px] overflow-hidden rounded-2xl border border-[var(--d-violet)]/20 bg-[radial-gradient(120%_90%_at_30%_20%,rgb(70_50_110_/_0.35),transparent_60%),rgb(10_14_31_/_0.5)] shadow-[0_20px_60px_rgb(0_0_0_/_0.5),0_0_0_1px_rgb(255_255_255_/_0.03)_inset]">
-          <svg
-            aria-hidden
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-0 z-[1] size-full"
-          >
+          <svg aria-hidden className="pointer-events-none absolute inset-0 z-[1] size-full">
             {segments.map(({ from, to }) => (
-              <motion.line
+              <line
                 key={`${from}-${to}`}
-                x1={SKY[from].x}
-                y1={SKY[from].y}
-                x2={SKY[to].x}
-                y2={SKY[to].y}
+                className="d-trail"
+                x1={`${SKY[from].x}%`}
+                y1={`${SKY[from].y}%`}
+                x2={`${SKY[to].x}%`}
+                y2={`${SKY[to].y}%`}
                 stroke="var(--d-gold)"
                 strokeWidth={1}
-                vectorEffect="non-scaling-stroke"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 0.55 }}
-                transition={{ duration: 1.2, ease: 'easeOut' }}
+                pathLength={1}
               />
             ))}
           </svg>
@@ -136,14 +143,9 @@ export function ConstellationDesign() {
         </p>
 
         {complete && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="d-display mt-3.5 text-center text-[22px] text-[var(--d-gold)] italic"
-          >
+          <p className="d-display d-appear mt-3.5 text-center text-[22px] text-[var(--d-gold)] italic">
             {td('constellation.complete')}
-          </motion.p>
+          </p>
         )}
 
         <footer className="d-label mt-5 text-center text-[10px] tracking-[0.2em] text-[var(--d-muted)]">

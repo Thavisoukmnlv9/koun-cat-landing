@@ -77,7 +77,7 @@ export function MemoryLeaf({ memory, page }: { memory: Memory; page: number }) {
   const body = t(memory.keys.back)
 
   return (
-    <div className="d-leaf absolute inset-0 flex flex-col overflow-hidden rounded-[3px_7px_7px_3px] px-[22px] pt-[22px] pb-5 backface-hidden">
+    <div className="d-leaf absolute inset-0 flex flex-col overflow-hidden rounded-[3px_7px_7px_3px] px-[22px] pt-[22px] pb-8 backface-hidden">
       <span className="d-page-curl pointer-events-none absolute inset-0" />
 
       <p className="d-body text-center text-[11px] tracking-[0.24em] text-[var(--d-gold)] uppercase">
@@ -87,27 +87,44 @@ export function MemoryLeaf({ memory, page }: { memory: Memory; page: number }) {
         {title}
       </h2>
 
-      <div className="relative mb-3.5 aspect-[4/3] shrink-0 overflow-hidden rounded-[3px] border-[5px] border-white shadow-[0_8px_18px_rgb(58_47_34_/_0.28)]">
-        {memory.kind === 'film' ? (
-          <video
-            src={FILM_SRC}
-            poster={`/images/journey/${memory.image}.jpg`}
-            controls
-            playsInline
-            preload="none"
-            className="size-full object-cover"
-          />
-        ) : (
-          <Picture
-            name={`journey/${memory.image}`}
-            alt={title}
-            className="size-full object-cover [filter:sepia(0.14)_contrast(1.03)]"
-          />
-        )}
+      {/* Two boxes, not one: the print is mounted in a white border, and only
+          the print itself clips. The prototype hung the tape at `top: -8px`
+          inside the very element carrying `overflow: hidden`, so the strip it
+          was meant to be held up by was invisible in the original too.
+
+          4:3 by preference, but capped at a share of the leaf. A page has a
+          fixed height, and on a 375px phone a full-width 4:3 print plus four
+          lines of a real note plus a player plus a sign-off does not fit —
+          something has to yield, and it should be the photograph rather than
+          the words. The cap crops rather than shrinks, because the print is
+          `object-cover`. */}
+      <div className="relative mb-3.5 aspect-[4/3] max-h-[38%] shrink-0 rounded-[3px] border-[5px] border-white shadow-[0_8px_18px_rgb(58_47_34_/_0.28)]">
+        {/* Absolutely filled rather than `size-full`: `aspect-ratio` only
+            *suggests* a height, and a portrait poster inside a 4/3 box was
+            enough to push the box taller and shove the prose off the leaf.
+            Taking the media out of flow makes the frame's shape final. */}
+        <div className="absolute inset-0 overflow-hidden">
+          {memory.kind === 'film' ? (
+            <video
+              src={FILM_SRC}
+              poster={`/images/journey/${memory.image}.jpg`}
+              controls
+              playsInline
+              preload="none"
+              className="size-full object-cover"
+            />
+          ) : (
+            <Picture
+              name={`journey/${memory.image}`}
+              alt={title}
+              className="size-full object-cover [filter:sepia(0.14)_contrast(1.03)]"
+            />
+          )}
+        </div>
 
         <span
           aria-hidden
-          className="absolute -top-2 left-1/2 h-[18px] w-[60px] -translate-x-1/2 -rotate-3 bg-[var(--d-gold)]/35 shadow-[0_1px_2px_rgb(0_0_0_/_0.15)]"
+          className="absolute -top-3 left-1/2 h-[18px] w-[60px] -translate-x-1/2 -rotate-3 bg-[var(--d-gold)]/35 shadow-[0_1px_2px_rgb(0_0_0_/_0.15)]"
         />
         <MediaChip
           kind={memory.kind}
@@ -117,8 +134,13 @@ export function MemoryLeaf({ memory, page }: { memory: Memory; page: number }) {
 
       {/* The drop cap is a `::first-letter` rule rather than the prototype's
           split-the-string-in-JavaScript, which produced a floated <span> that
-          screen readers announced as a separate word. */}
-      <p className="d-body min-h-0 flex-1 overflow-y-auto text-[15.5px] leading-relaxed text-[#4a3d2b] first-letter:float-left first-letter:pt-1.5 first-letter:pr-2 first-letter:[font-family:var(--d-display)] first-letter:text-[52px] first-letter:leading-[0.7] first-letter:text-[var(--d-leather)]">
+          screen readers announced as a separate word.
+
+          Faded at the foot rather than cut at it: some of these notes are
+          longer than the page, so the overflow scrolls — and a hard edge
+          through the middle of a line of type reads as broken text, where a
+          fade reads as "there is more". */}
+      <p className="d-body min-h-0 flex-1 overflow-y-auto [mask-image:linear-gradient(180deg,#000_calc(100%-1.5rem),transparent)] text-[15.5px] leading-relaxed text-[#4a3d2b] first-letter:float-left first-letter:pt-1.5 first-letter:pr-2 first-letter:[font-family:var(--d-display)] first-letter:text-[52px] first-letter:leading-[0.7] first-letter:text-[var(--d-leather)]">
         {body}
       </p>
 
@@ -134,9 +156,12 @@ export function MemoryLeaf({ memory, page }: { memory: Memory; page: number }) {
         {td(memory.flavour.sign)}
       </p>
 
+      {/* Centred at the foot, where a book puts it — and, less romantically,
+          the one place it cannot land on the signature. Both were bottom-right
+          in the prototype, whose sign-offs were short enough to miss it. */}
       <span
         aria-hidden
-        className="d-body absolute right-[18px] bottom-3 text-[11px] text-[var(--d-sepia)] italic"
+        className="d-body absolute bottom-2.5 left-1/2 -translate-x-1/2 text-[11px] text-[var(--d-sepia)] italic"
       >
         {page}
       </span>

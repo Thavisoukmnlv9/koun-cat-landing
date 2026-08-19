@@ -44,7 +44,12 @@ export function Projection({
       open={memory !== null}
       onClose={onClose}
       labelledBy={titleId}
-      className="w-full max-w-[560px]"
+      // The design's scope class has to be repeated here. `Modal` portals its
+      // panel to <body>, which is outside the `.d-*` element that declares this
+      // design's palette — so every `var(--d-…)` inside would resolve to
+      // nothing and the card would inherit the page's colours instead. The
+      // class travels with the content that needs it.
+      className="d-filmstrip w-full max-w-[560px]"
     >
       {memory && (
         <div className="d-filmstrip rounded-[3px] bg-[var(--d-plate)] p-3 shadow-[0_30px_80px_rgb(0_0_0_/_0.6)]">

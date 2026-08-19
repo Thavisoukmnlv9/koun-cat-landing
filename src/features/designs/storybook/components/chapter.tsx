@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'motion/react'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Picture } from '@/features/journey/components/picture'
 import { useReveal } from '@/features/journey/hooks/use-reveal'
 import { usePrefersReducedMotion } from '@/lib/hooks'
 
@@ -101,7 +102,7 @@ export function Chapter({
     <section
       ref={sectionRef}
       aria-labelledby={`chapter-${memory.id}`}
-      className="relative flex min-h-[100svh] items-end overflow-hidden"
+      className="relative flex min-h-[calc(100svh-var(--designs-header,0px))] items-end overflow-hidden"
     >
       <motion.div style={{ y: reduced ? 0 : y }} className="absolute inset-x-0 -inset-y-[12%] z-0">
         {memory.kind === 'film' ? (
@@ -116,11 +117,16 @@ export function Chapter({
             className="d-scene size-full object-cover"
           />
         ) : (
-          <div
-            role="img"
-            aria-label={title}
-            style={{ backgroundImage: `url(/images/journey/${memory.image}.jpg)` }}
-            className="d-scene size-full bg-cover bg-center"
+          // `Picture` rather than a `background-image`, which is what the
+          // prototype used for its full-bleed scenes. A background can only
+          // name one file, so it would always fetch the JPEG; `<picture>`
+          // offers the AVIF first, and these are the largest images on the site
+          // — full-screen, six of them, one per chapter.
+          <Picture
+            name={`journey/${memory.image}`}
+            alt={title}
+            className="d-scene size-full object-cover"
+            priority={index === 0}
           />
         )}
       </motion.div>

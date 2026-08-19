@@ -2,6 +2,8 @@ import { motion, useScroll } from 'motion/react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Picture } from '@/features/journey/components/picture'
+
 import { memoriesFor } from '../data/memories'
 
 import { Chapter } from './components/chapter'
@@ -79,12 +81,20 @@ export function StorybookDesign() {
       </nav>
 
       {/* ── Cover ────────────────────────────────────────────────────── */}
-      <section className="relative flex h-[100svh] flex-col items-center justify-center overflow-hidden px-6 text-center">
-        <div
-          aria-hidden
-          style={{ backgroundImage: `url(/images/journey/${memories[0].image}.jpg)` }}
-          className="absolute -inset-[8%] z-0 bg-cover bg-center [filter:brightness(0.5)_contrast(1.05)_saturate(1.05)]"
-        />
+      {/* The header is sticky and sits over the top of this, so a plain
+          `100svh` would put the scroll cue permanently below the fold — see
+          `useHeaderHeight` in designs-page. */}
+      <section className="relative flex h-[calc(100svh-var(--designs-header,0px))] flex-col items-center justify-center overflow-hidden px-6 text-center">
+        {/* The one image on the page that is worth loading eagerly: it is the
+            first screen, and nothing else competes with it. */}
+        <div aria-hidden className="absolute -inset-[8%] z-0">
+          <Picture
+            name={`journey/${memories[0].image}`}
+            alt=""
+            priority
+            className="size-full object-cover [filter:brightness(0.5)_contrast(1.05)_saturate(1.05)]"
+          />
+        </div>
         <span
           aria-hidden
           className="absolute inset-0 z-[1] bg-[radial-gradient(120%_90%_at_50%_40%,transparent,rgb(20_18_16_/_0.7))]"
@@ -120,7 +130,13 @@ export function StorybookDesign() {
       {/* ── The chapters ─────────────────────────────────────────────── */}
       <main>
         {memories.map((memory, i) => (
-          <div key={memory.id} id={`storybook-chapter-${i}`}>
+          <div
+            key={memory.id}
+            id={`storybook-chapter-${i}`}
+            // `scroll-margin-top` so a jump from the dot rail parks the chapter
+            // below the sticky header rather than under it.
+            className="scroll-mt-[var(--designs-header,0px)]"
+          >
             <Chapter memory={memory} index={i} onEnter={onEnter} />
           </div>
         ))}

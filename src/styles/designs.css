@@ -466,6 +466,47 @@
       0 0 34px 14px rgb(233 200 119 / 0.5);
   }
 
+  /* The line between two lit stars.
+
+     CSS rather than Motion because there is nothing here for JavaScript to
+     decide: the draw is one fixed curve over one fixed duration, identical for
+     every segment, and it plays once when the line appears. Five of these under
+     Motion would be five animations on the frame loop for a decoration that a
+     keyframe expresses exactly.
+
+     `pathLength="1"` on the element is what makes "identical for every segment"
+     true. It renormalises the line's length to 1 whatever it actually measures,
+     so `stroke-dasharray: 1` is always precisely one full-length dash and one
+     keyframe draws every line on the page at the same rate.
+
+     The resting state is the drawn state, and the animation only takes it away
+     and gives it back. That ordering is deliberate: an element whose *only*
+     route to visible is an animation is an element that is missing for as long
+     as anything stops that animation running. (Both CSS and Motion are paused
+     while a tab is hidden and both resume when it is looked at, so this is
+     belt-and-braces rather than a fix for a known failure — but it costs
+     nothing to write it the safe way round.) */
+  .d-trail {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .d-trail {
+      animation: d-draw 1.2s ease-out;
+    }
+  }
+
+  /* Same contract: visible at rest, the fade is the flourish. */
+  .d-appear {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .d-appear {
+      animation: d-appear 0.8s ease-out;
+    }
+  }
+
   /* ══ IX · STORYBOOK ════════════════════════════════════════════════════ */
   .d-storybook {
     --d-ink: #1a1614;
@@ -626,5 +667,25 @@
   }
   50% {
     transform: translateY(7px);
+  }
+}
+
+@keyframes d-draw {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+}
+
+@keyframes d-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

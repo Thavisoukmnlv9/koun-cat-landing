@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LanguageSwitcher } from '@/features/journey/components/language-switcher'
@@ -54,10 +54,47 @@ function useHashDesign(): [DesignId, (id: DesignId) => void] {
   return [active, select]
 }
 
+/**
+ * Publishes the sticky header's height as `--designs-header` on the page root.
+ *
+ * A design that wants a full-screen section cannot simply ask for `100svh`: the
+ * tab bar is sticky and sits over the top of it, so the last few rem of every
+ * such section fall below the fold. That is harmless in the middle of a scroll
+ * — you can always scroll further — but on the *first* screen there is nothing
+ * to scroll up from, and the storybook's "scroll to begin" cue sat permanently
+ * out of sight because of it.
+ *
+ * The height cannot be hard-coded because the header is two rows on a phone and
+ * one from `sm:` up, and it cannot be expressed in CSS alone because no
+ * selector reaches from a section back up to a sibling's box. So it is measured
+ * — once, and again whenever it changes — and written where any design can read
+ * it as `calc(100svh - var(--designs-header, 0px))`.
+ */
+function useHeaderHeight(root: React.RefObject<HTMLDivElement | null>) {
+  const header = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const element = header.current
+    const target = root.current
+    if (!element || !target || typeof ResizeObserver !== 'function') return
+
+    const publish = () => target.style.setProperty('--designs-header', `${element.offsetHeight}px`)
+
+    publish()
+    const observer = new ResizeObserver(publish)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [root])
+
+  return header
+}
+
 export function DesignsPage() {
   const { t } = useTranslation('designs')
   const reduced = usePrefersReducedMotion()
   const [active, select] = useHashDesign()
+  const rootRef = useRef<HTMLDivElement>(null)
+  const headerRef = useHeaderHeight(rootRef)
   useDocumentMeta()
 
   // Each design is a full page of its own, so arriving at one halfway down is
@@ -70,10 +107,13 @@ export function DesignsPage() {
   const { Component } = entry
 
   return (
-    <div className="bg-paper min-h-screen">
+    <div ref={rootRef} className="bg-paper min-h-screen">
       {/* The bar stays put: it is the only way back out of a design, and every
           one of them is several screens tall. */}
-      <header className="border-rule/40 bg-paper/85 sticky top-0 z-[70] border-b backdrop-blur-md">
+      <header
+        ref={headerRef}
+        className="border-rule/40 bg-paper/85 sticky top-0 z-[70] border-b backdrop-blur-md"
+      >
         {/* Two rows on a phone, one on anything wider. Eleven tabs and a
             language switcher come to roughly 1000px of content, so sharing a
             375px row left the tabs clipped mid-word — which reads as broken
