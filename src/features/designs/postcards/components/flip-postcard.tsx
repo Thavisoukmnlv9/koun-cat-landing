@@ -5,12 +5,7 @@ import { Picture } from '@/features/journey/components/picture'
 
 import { AudioNote } from '../../components/audio-note'
 import { MediaChip } from '../../components/media-chip'
-import { FILM_SRC, type Memory } from '../../data/memories'
-
-/** The rubber stamp's year, pulled off whatever shape the date is written in. */
-function yearOf(date: string): string {
-  return /\d{4}/.exec(date)?.[0] ?? ''
-}
+import { FILM_SRC, yearOf, type Memory } from '../../data/memories'
 
 /**
  * One airmail postcard, photograph on the front and the note on the back.

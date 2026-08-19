@@ -1,28 +1,35 @@
 /**
- * Copy for the five design variants, in English.
+ * Copy for the ten design variants, in English.
  *
  * This bundle holds only what the *designs* add: their chrome (kickers, titles,
  * ledes, control labels) and the small amount of per-memory flavour each one
  * invented — a distance on the map, a salutation on a letter, a greeting on a
- * postcard.
+ * postcard, a line of label prose beside an exhibited piece.
  *
  * Everything factual about a memory — its date, place, title, caption and the
  * note on its back — still lives in `features/journey/i18n/en.ts` and is read
- * through the key paths on each `Memory`. There is one archive; these are five
+ * through the key paths on each `Memory`. There is one archive; these are ten
  * ways of reading it.
+ *
+ * Several strings here are templates rather than sentences, because the value
+ * they interpolate is derived rather than written: the constellation's
+ * catalogue number and the exhibition's accession number both take the year out
+ * of a memory's own date, so neither needed ten more lines of copy.
  *
  * A note on the flavour copy: the prototypes were written against six invented
  * memories (a rooftop, a coast road, a rainy Sunday). The salutations and
  * signatures were general enough to carry over word for word. The map's
  * distances were not — "312 km travelled together" belonged to a story that is
- * not this one — so those lines are rewritten against the real places.
+ * not this one — so those lines are rewritten against the real places. The same
+ * went for the exhibition's `medium` lines, which named rooms this story has
+ * never been in.
  */
 
 export const en = {
   meta: {
-    title: 'Our Journey — five ways to tell it',
+    title: 'Our Journey — ten ways to tell it',
     description:
-      'The same archive, told five ways: a filmstrip, postcards, a map, a wall, and letters.',
+      'The same archive, told ten ways: a filmstrip, postcards, a map, a wall, letters, a mixtape, an album, a constellation, a storybook and an exhibition.',
   },
 
   /** The header tab bar. */
@@ -34,6 +41,11 @@ export const en = {
     map: 'The Map',
     gallery: 'The Wall',
     letters: 'Letters',
+    mixtape: 'Mixtape',
+    album: 'The Album',
+    constellation: 'Constellation',
+    storybook: 'Storybook',
+    exhibition: 'Exhibition',
   },
 
   /** Media badges. Each design words them slightly differently. */
@@ -44,6 +56,10 @@ export const en = {
     photoEnclosed: 'Photo enclosed',
     voiceNote: 'Voice note',
     filmEnclosed: 'Film enclosed',
+    /** The storybook announces each chapter's medium in a full phrase. */
+    photoChapter: 'A photograph',
+    soundChapter: 'With sound',
+    filmChapter: 'Moving picture',
   },
 
   filmstrip: {
@@ -112,17 +128,96 @@ export const en = {
     count: 'Letters № 01–{{total}}',
   },
 
+  mixtape: {
+    eyebrow: 'Side A · for you',
+    titleA: 'Our ',
+    titleAccent: 'Mix',
+    titleB: 'tape',
+    sub: 'one song, and everything it reminds me of',
+    nowPlaying: 'Now playing',
+    tracklist: 'Tracklist · {{total}} memories',
+    /**
+     * The prototype gave each of its six tracks a different song and a made-up
+     * running time. There is one song. Rather than invent five more or fake the
+     * durations, side A plays straight through and the list says what each part
+     * of it is about — which is what a real mixtape insert does.
+     */
+    tracklistNote: 'Side A runs straight through. Pick a memory and read along with it.',
+    footer: '♪ THE B-SIDE IS STILL BEING WRITTEN ♪',
+  },
+
+  album: {
+    volume: 'Volume I',
+    title: 'The Album of Us',
+    coverTitle: 'Our Journey',
+    coverSub: 'a keepsake of us',
+    coverYears: '{{from}} — today',
+    monogram: 'us',
+    openCue: 'turn the page ›',
+    back: 'Back',
+    turn: 'Turn',
+    cover: 'Cover',
+    end: 'The End',
+    leaf: 'Leaf {{current}} / {{total}}',
+    finTitle: 'The story continues…',
+    finSub: '— to be added to, always —',
+    ourSong: 'our song',
+  },
+
+  constellation: {
+    coord: 'RA 17h 58m · Dec +17°58′',
+    title: 'The Constellation of Us',
+    lede: 'Every memory is a star. Tap them one by one and watch our constellation appear.',
+    /** Derived: the year comes out of the memory's own date, the magnitude from its place in the sky. */
+    catalogue: '★ HD-{{year}} · mag {{mag}}',
+    progress: '{{lit}} of {{total}} stars lit',
+    complete: '✦ our constellation is complete — and still growing ✦',
+    nextStar: '✦ light the next star →',
+    footer: 'CATALOGUED WITH LOVE · MAG 1.0',
+    ourSong: 'our song',
+  },
+
+  storybook: {
+    eyebrow: 'A story in {{total}} chapters',
+    titleA: 'Our ',
+    titleAccent: 'Journey',
+    sub: 'the whole of us, one scene at a time',
+    scrollCue: 'Scroll to begin',
+    chapter: 'Chapter {{numeral}}',
+    playClip: 'Play the clip',
+    pauseClip: 'Pause the clip',
+    playSong: 'Play our song',
+    pauseSong: 'Pause our song',
+    closingA: 'and the best chapters are',
+    closingAccent: 'still unwritten',
+    closingSub: '— to be continued, with you —',
+  },
+
+  exhibition: {
+    eyebrow: 'Now showing · Gallery of Us',
+    titleA: 'The ',
+    titleAccent: 'Exhibition',
+    curated: 'A permanent collection · Est. {{from}}',
+    /** Derived, the way a real accession number is: year of acquisition, then the running number. */
+    accession: 'No. {{year}}.{{number}}',
+    counter: '{{current}} / {{total}}',
+    hint: 'swipe the artwork ‹ ›',
+    listening: 'listening post',
+  },
+
   /**
    * Per-memory flavour, keyed by the journey postcard it decorates.
    *
    * `dist` is the map's line under each stop; `greet`/`postSign` are the
-   * postcard's; `salut`/`sign`/`who` open and close a letter. A memory that no
-   * design decorates still needs every key, because the shape is uniform.
+   * postcard's; `salut`/`sign`/`who` open and close a letter; `medium` is the
+   * line of label prose beside an exhibited piece. A memory that no design
+   * decorates still needs every key, because the shape is uniform.
    */
   memories: {
     c01: {
       dist: '0 km — where it started',
       greet: 'Greetings from',
+      medium: 'Coffee light, late afternoon · from the private collection',
       postSign: '— always, me',
       salut: 'My love,',
       sign: 'Yours from the start,',
@@ -131,6 +226,7 @@ export const en = {
     c02: {
       dist: '153 km north — our first road together',
       greet: 'A postcard from',
+      medium: 'Two wrong buses, one shared umbrella',
       postSign: '— your co-pilot',
       salut: 'Dearest you,',
       sign: 'Your co-pilot,',
@@ -139,6 +235,7 @@ export const en = {
     c03: {
       dist: 'however far it was, worth the walk',
       greet: 'Hand-delivered to',
+      medium: 'Doorstep, flowers held like the whole day',
       postSign: '— me, holding flowers',
       salut: 'To the one who opened the door,',
       sign: 'Still nervous, still yours,',
@@ -147,6 +244,7 @@ export const en = {
     c04: {
       dist: 'a detour we never regretted',
       greet: 'Written from',
+      medium: 'Loud water, cold spray, mixed weather',
       postSign: '— soaked, and glad',
       salut: 'My favourite detour,',
       sign: 'Wherever the road goes,',
@@ -155,6 +253,7 @@ export const en = {
     c05: {
       dist: '0 km — the whole street was ours',
       greet: 'Filmed at',
+      medium: 'Moving image · water, powder, one street',
       postSign: '— sun-drunk, me',
       salut: 'My sunshine,',
       sign: 'Soaked and laughing,',
@@ -163,6 +262,7 @@ export const en = {
     c06: {
       dist: 'the shortest walk, the best one',
       greet: 'Sounds like',
+      medium: 'Sound piece · the table we keep going back to',
       postSign: '— yours, warmly',
       salut: 'To my favourite sound,',
       sign: 'Warmly, endlessly,',
@@ -171,6 +271,7 @@ export const en = {
     c07: {
       dist: 'however far — still together',
       greet: 'Just a note from',
+      medium: 'The hard month, kept in the collection anyway',
       postSign: '— all my love',
       salut: 'My steady one,',
       sign: 'Through all of it,',
@@ -179,6 +280,7 @@ export const en = {
     c08: {
       dist: '153 km, and the same mountains',
       greet: 'Greetings again from',
+      medium: 'Cold balcony, red hoodie, the same view',
       postSign: '— us, again',
       salut: 'My whole ordinary world,',
       sign: 'All my love, all of it,',
@@ -187,6 +289,7 @@ export const en = {
     c09: {
       dist: '0 km — the day the map got a centre',
       greet: 'With everyone, from',
+      medium: 'Gold and flowers · one room, everyone in it',
       postSign: '— yours, officially',
       salut: 'My yes,',
       sign: 'Beginning again, with you,',
@@ -195,6 +298,7 @@ export const en = {
     c10: {
       dist: '0 km — exactly where I want to be',
       greet: 'Still writing from',
+      medium: 'Kitchen light, ordinary hour',
       postSign: '— all my love, still',
       salut: 'My every ordinary day,',
       sign: 'Today and the next ten,',
@@ -214,6 +318,18 @@ export const en = {
     pauseSound: 'Pause',
     seek: 'Seek',
     projector: 'Run the projector',
+    /** VI–X. */
+    selectTrack: 'Show {{title}}',
+    prevTrack: 'Previous memory',
+    nextTrack: 'Next memory',
+    turnPage: 'Turn to the next page',
+    prevPage: 'Turn back',
+    openStar: 'Open {{title}}',
+    chapters: 'Chapters',
+    goToChapter: 'Go to chapter {{numeral}}',
+    prevPiece: 'Previous piece',
+    nextPiece: 'Next piece',
+    showPiece: 'Bring {{title}} to the centre',
   },
 } as const
 

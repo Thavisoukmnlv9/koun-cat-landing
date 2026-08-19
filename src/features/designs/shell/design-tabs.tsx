@@ -1,7 +1,8 @@
 import { motion } from 'motion/react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { usePrefersReducedMotion } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 
 import { DESIGNS, type DesignId } from './registry'
@@ -10,11 +11,18 @@ import { DESIGNS, type DesignId } from './registry'
  * The header tab bar.
  *
  * Hand-rolled, because the project has no headless UI library and adding one
- * for six buttons would be more dependency than component — the same call
+ * for eleven buttons would be more dependency than component — the same call
  * `modal.tsx` made for the dialog. What that costs is the keyboard contract,
  * which a real tablist owes and which is implemented here rather than assumed:
  * roving `tabIndex` so the group is a single tab stop, arrow keys to move
  * between tabs, Home and End to jump to the ends.
+ *
+ * Eleven tabs are far wider than any phone, so the bar scrolls — and a
+ * scrolling tablist owes one more thing: the selected tab has to be *visible*.
+ * Arrow-keying to a tab off the right-hand edge, or arriving on one from a
+ * `#hash` in a shared link, both leave the active tab out of frame with no
+ * indication anything is selected at all. So the active tab is scrolled into
+ * view whenever it changes, from wherever the change came from.
  *
  * The moving underline is a `layoutId`, so it travels between tabs rather than
  * fading in a new place. It is safe to animate here in a way the lightbox's
@@ -31,7 +39,19 @@ export function DesignTabs({
   className?: string
 }) {
   const { t } = useTranslation('designs')
+  const reduced = usePrefersReducedMotion()
   const refs = useRef<(HTMLButtonElement | null)[]>([])
+
+  useEffect(() => {
+    const index = DESIGNS.findIndex((d) => d.id === active)
+    refs.current[index]?.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      // `nearest` on the block axis, or scrolling the bar would also scroll the
+      // whole page up to meet it.
+      block: 'nearest',
+      inline: 'center',
+    })
+  }, [active, reduced])
 
   const move = (from: number, delta: number) => {
     const next = (from + delta + DESIGNS.length) % DESIGNS.length
@@ -60,8 +80,8 @@ export function DesignTabs({
       role="tablist"
       aria-label={t('a11y.tablist')}
       className={cn(
-        // Scrolls rather than wraps: six tabs do not fit across a 375px phone,
-        // and a second row would push the design itself below the fold.
+        // Scrolls rather than wraps: eleven tabs do not fit across a 375px
+        // phone, and a second row would push the design itself below the fold.
         'flex snap-x snap-mandatory scrollbar-none gap-1 overflow-x-auto',
         className,
       )}

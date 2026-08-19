@@ -8,9 +8,10 @@ import type { MemoryKind } from '../data/memories'
  * The little badge that says what a memory is.
  *
  * Every prototype drew one and every prototype worded it differently — "✷ Photo"
- * on the filmstrip, "✦ Photo enclosed" on an envelope, a bare "♪" on the wall.
- * The glyph is the constant, so it lives here; the wording is a `variant`, and
- * the look is entirely the caller's `className` against its own palette.
+ * on the filmstrip, "✦ Photo enclosed" on an envelope, a bare "♪" on the wall,
+ * "✦ A photograph" over a storybook chapter. The glyph is the constant, so it
+ * lives here; the wording is a `variant`, and the look is entirely the caller's
+ * `className` against its own palette.
  */
 const GLYPH: Record<MemoryKind, string> = {
   photo: '✦',
@@ -25,6 +26,12 @@ const LABEL = {
     voice: 'chips.voiceNote',
     film: 'chips.filmEnclosed',
   },
+  /** The storybook, which announces a chapter's medium as a phrase. */
+  chapter: {
+    photo: 'chips.photoChapter',
+    voice: 'chips.soundChapter',
+    film: 'chips.filmChapter',
+  },
 } as const
 
 export function MediaChip({
@@ -35,7 +42,7 @@ export function MediaChip({
   className,
 }: {
   kind: MemoryKind
-  variant?: 'short' | 'enclosed'
+  variant?: 'short' | 'enclosed' | 'chapter'
   /** Override for the filmstrip, whose photo mark is a six-pointed ✷. */
   glyph?: string
   /**
