@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -92,27 +91,31 @@ export function DesignsPage() {
         </div>
       </header>
 
-      {/* `mode="wait"` so the outgoing design is gone before the next arrives.
-          Only the active one is mounted at all — five designs at once would mean
-          five scroll observers, a projector loop and a self-measuring SVG all
-          running for panels nobody is looking at, and the map in particular
-          cannot measure a subtree that has never been laid out. */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.main
-          key={active}
-          id={`design-panel-${active}`}
-          role="tabpanel"
-          aria-labelledby={`design-tab-${active}`}
-          tabIndex={-1}
-          data-design={active}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reduced ? 0 : 0.22, ease: 'easeOut' }}
-        >
-          <Component />
-        </motion.main>
-      </AnimatePresence>
+      {/* A plain <main>, with no entrance animation on the panel itself.
+
+          Two reasons, and the second is the one that decided it. A crossfade
+          needs something to fade against, and there is nothing: only one design
+          is ever mounted, and the page scrolls back to the top on every change.
+          More importantly, an opacity animation is driven by
+          `requestAnimationFrame`, which the browser pauses whenever the document
+          is hidden — so a panel that is only visible once its animation has run
+          renders as a blank page in a backgrounded tab and stays blank until the
+          tab is looked at. Making a design's visibility depend on a frame loop
+          buys a 240ms fade and risks the whole page.
+
+          The designs are not motionless as a result. Each brings its own
+          entrance — the map's stops reveal on scroll, the filmstrip's frames
+          settle, and the tab underline travels between tabs on a `layoutId`. */}
+      <main
+        key={active}
+        id={`design-panel-${active}`}
+        role="tabpanel"
+        aria-labelledby={`design-tab-${active}`}
+        tabIndex={-1}
+        data-design={active}
+      >
+        <Component />
+      </main>
 
       <span className="sr-only" aria-live="polite">
         {t(entry.labelKey)}
