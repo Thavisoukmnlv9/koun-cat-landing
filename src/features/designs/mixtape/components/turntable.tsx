@@ -4,6 +4,10 @@ import { Picture } from '@/features/journey/components/picture'
 
 import type { Memory } from '../../data/memories'
 
+/** Where the arm sits parked, and where it sits playing, in degrees. */
+const REST_ANGLE = 8
+const PLAY_ANGLE = 34
+
 /**
  * The deck: a platter, a label, a spindle and a tonearm.
  *
@@ -27,7 +31,13 @@ export function Turntable({ memory, playing }: { memory: Memory; playing: boolea
   const { t } = useTranslation()
 
   return (
-    <div className="relative mx-auto mt-7 aspect-square w-[min(88vw,360px)] rounded-[14px] border border-[var(--d-brass)]/25 bg-[linear-gradient(150deg,var(--d-panel),var(--d-panel-2))] p-[22px] shadow-[0_24px_50px_rgb(0_0_0_/_0.55),0_1px_0_rgb(255_255_255_/_0.06)_inset]">
+    // `overflow-hidden` is a guard rather than a fix: a plinth is a physical
+    // object and nothing should hang off it. The prototype relied on a blanket
+    // `overflow-x: hidden` on <body> to hide a tonearm that swung 46px past the
+    // deck's right edge; here the arm is drawn so that it does not, and this
+    // only guarantees that no future adjustment can put the whole page into
+    // sideways scroll again.
+    <div className="relative mx-auto mt-7 aspect-square w-[min(88vw,360px)] overflow-hidden rounded-[14px] border border-[var(--d-brass)]/25 bg-[linear-gradient(150deg,var(--d-panel),var(--d-panel-2))] p-[22px] shadow-[0_24px_50px_rgb(0_0_0_/_0.55),0_1px_0_rgb(255_255_255_/_0.06)_inset]">
       <div
         data-spinning={playing}
         className="d-platter relative size-full rounded-full"
@@ -36,10 +46,16 @@ export function Turntable({ memory, playing }: { memory: Memory; playing: boolea
         <span className="d-shine pointer-events-none absolute inset-0 rounded-full" />
 
         {/* The paper label. It carries the memory you are reading, not the song
-            — the song is the whole side. */}
-        <span className="d-disc-label absolute top-1/2 left-1/2 flex size-[38%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full px-1.5 text-center text-[#1a1310]">
-          <span className="d-label text-[10px] tracking-[0.1em]">{memory.number}</span>
-          <span className="d-display mt-px text-[12px] leading-none font-bold text-balance">
+            — the song is the whole side.
+
+            Number above the spindle hole and title below it, rather than both
+            stacked in the middle: the spindle sits dead centre by definition,
+            and the prototype's two-word titles were short enough to clear it.
+            These are real titles, and "Where it started" ran straight under the
+            pin. */}
+        <span className="d-disc-label absolute top-1/2 left-1/2 flex size-[38%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full px-2 text-center text-[#1a1310]">
+          <span className="d-label mb-3 text-[10px] tracking-[0.1em]">{memory.number}</span>
+          <span className="d-display mt-1.5 text-[12px] leading-tight font-bold text-balance">
             {t(memory.keys.title)}
           </span>
         </span>
@@ -47,18 +63,27 @@ export function Turntable({ memory, playing }: { memory: Memory; playing: boolea
         <span className="absolute top-1/2 left-1/2 z-[2] size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#05070a]" />
       </div>
 
-      {/* Tonearm. `transform-origin` sits at the pivot bearing, top-right. */}
+      {/* Tonearm.
+          
+          One bar hinged at the bearing, rather than the prototype's box of
+          three absolutely-placed parts rotated as a group about a point 88%
+          across it. That construction is why the arm hung off the deck: the
+          rotation origin was not the pivot, so swinging the arm also *moved*
+          it. Here the element's own top edge is the bearing, so the arm turns
+          on the spot the way the real thing does — and its reach can be stated
+          plainly as a fraction of the deck, which is what keeps it on the
+          plinth at both angles.
+
+          Positive degrees swing the head to the left, towards the spindle: a
+          point below the origin rotates towards the left under a clockwise
+          turn in screen coordinates. */}
       <div
         aria-hidden
-        style={{
-          transformOrigin: '88% 12%',
-          transform: `rotate(${playing ? -12 : -32}deg)`,
-        }}
-        className="absolute top-2 right-2.5 z-[4] h-[46%] w-[46%] transition-transform duration-[800ms] ease-[cubic-bezier(0.5,0.05,0.2,1)]"
+        style={{ transform: `rotate(${playing ? PLAY_ANGLE : REST_ANGLE}deg)` }}
+        className="absolute top-[13%] right-[13%] z-[4] h-[44%] w-[3px] origin-top rounded-[3px] bg-[linear-gradient(#d9d2c4,#8f8778)] transition-transform duration-[800ms] ease-[cubic-bezier(0.5,0.05,0.2,1)]"
       >
-        <span className="absolute top-[2%] right-[2%] size-[26px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#e9e2d4,#8d8574)] shadow-[0_3px_6px_rgb(0_0_0_/_0.5)]" />
-        <span className="absolute top-4 right-4 h-[74%] w-[3px] origin-top -rotate-[16deg] rounded-[3px] bg-[linear-gradient(#d9d2c4,#8f8778)]" />
-        <span className="absolute bottom-[6%] left-[16%] h-2.5 w-4 rotate-[20deg] rounded-[2px] bg-[#2a2622]" />
+        <span className="absolute -top-3 left-1/2 size-[26px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#e9e2d4,#8d8574)] shadow-[0_3px_6px_rgb(0_0_0_/_0.5)]" />
+        <span className="absolute -bottom-1 left-1/2 h-2.5 w-4 -translate-x-1/2 rotate-[20deg] rounded-[2px] bg-[#2a2622]" />
       </div>
     </div>
   )

@@ -41,11 +41,24 @@ export function DesignTabs({
   const { t } = useTranslation('designs')
   const reduced = usePrefersReducedMotion()
   const refs = useRef<(HTMLButtonElement | null)[]>([])
+  const settled = useRef(false)
 
   useEffect(() => {
     const index = DESIGNS.findIndex((d) => d.id === active)
+
+    // The first pass jumps, every pass after it slides.
+    //
+    // Not a flourish either way. A smooth scroll is driven by the browser's
+    // frame loop, which is paused while the document is hidden — so a page
+    // opened in a background tab, or restored from one, would finish loading
+    // with its selected tab still off-screen and nothing in the bar appearing
+    // selected at all. On the first paint there is also nothing to animate
+    // *from*: the reader has not seen the bar in any other position.
+    const behavior = settled.current && !reduced ? 'smooth' : 'auto'
+    settled.current = true
+
     refs.current[index]?.scrollIntoView({
-      behavior: reduced ? 'auto' : 'smooth',
+      behavior,
       // `nearest` on the block axis, or scrolling the bar would also scroll the
       // whole page up to meet it.
       block: 'nearest',
