@@ -88,6 +88,27 @@
     --d-script: 'Caveat', 'Noto Sans', cursive;
   }
 
+  /* A specimen tile arriving. It rises; it never starts invisible.
+
+     `.reveal` in globals.css fades from `opacity: 0`, which is right for a card
+     halfway down a story and wrong here. These eleven tiles are the only
+     navigation on the site's front door, and an IntersectionObserver does not
+     deliver while the document is hidden — so a home opened in a background tab
+     would finish loading as a headline over nothing at all, and stay that way
+     until somebody looked at it. Moving is decoration and can afford to be
+     missed; being visible cannot. */
+  .d-tile-rise {
+    transform: translateY(14px);
+  }
+  .d-tile-rise[data-revealed] {
+    transform: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .d-tile-rise {
+      transition: transform 0.75s var(--ease-reveal);
+    }
+  }
+
   /* ══ I · FILMSTRIP ═════════════════════════════════════════════════════ */
   .d-filmstrip {
     --d-espresso: #17100c;

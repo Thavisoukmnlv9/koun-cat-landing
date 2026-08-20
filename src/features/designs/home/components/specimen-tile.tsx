@@ -5,6 +5,7 @@ import { useReveal } from '@/features/journey/hooks/use-reveal'
 import { cn } from '@/lib/utils'
 
 import { SPECIMENS, type SpecimenId } from '../data/specimens'
+
 import { SpecimenPlate } from './specimen-plate'
 import { TileMark } from './tile-mark'
 
@@ -47,8 +48,7 @@ export function SpecimenTile({ id }: { id: SpecimenId }) {
     <li
       ref={ref}
       data-revealed={revealed || undefined}
-      className="reveal mb-3 break-inside-avoid sm:mb-4"
-      style={{ '--reveal-y': '18px' } as CSSProperties}
+      className="d-tile-rise mb-3 break-inside-avoid sm:mb-4"
     >
       <a
         href={`#${id}`}
