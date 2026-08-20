@@ -50,7 +50,7 @@ export function FilmstripDesign() {
       <div aria-hidden className="d-grain pointer-events-none fixed inset-0 z-[60]" />
 
       <header className="mx-auto max-w-[520px] px-5 pt-11 text-center">
-        <p className="d-label text-[11px] tracking-[0.3em] text-[#8f7a5f] uppercase">
+        <p className="d-label text-[11px] tracking-[0.3em] text-[#9b8468] uppercase">
           — {td('filmstrip.leader')} —
         </p>
 
@@ -74,7 +74,7 @@ export function FilmstripDesign() {
           {td(projector.running ? 'filmstrip.pause' : 'filmstrip.run')}
         </button>
 
-        <p className="d-label mt-3 text-[11px] tracking-[0.22em] text-[#6f5c44] uppercase">
+        <p className="d-label mt-3 text-[11px] tracking-[0.22em] text-[#9e8361] uppercase">
           {td('filmstrip.frame', {
             current: String(frame).padStart(2, '0'),
             total: String(memories.length).padStart(2, '0'),
@@ -126,7 +126,7 @@ export function FilmstripDesign() {
                 </span>
 
                 <span className="block px-1 pt-3 pb-1 text-center">
-                  <span className="d-label block text-[10px] tracking-[0.22em] text-[#8f7a5f] uppercase">
+                  <span className="d-label block text-[10px] tracking-[0.22em] text-[#9b8468] uppercase">
                     {t(memory.keys.date)}
                   </span>
                   <span className="d-display mt-1 block text-[22px] leading-tight text-[var(--d-cream)] italic">
@@ -141,7 +141,7 @@ export function FilmstripDesign() {
                 <p className="d-display text-[40px] text-[var(--d-gold)] italic">
                   {td('filmstrip.fin')}
                 </p>
-                <p className="d-label mt-2 text-[10px] tracking-[0.24em] text-[#6f5c44] uppercase">
+                <p className="d-label mt-2 text-[10px] tracking-[0.24em] text-[#9e8361] uppercase">
                   {td('filmstrip.continued')}
                 </p>
               </div>
@@ -150,7 +150,7 @@ export function FilmstripDesign() {
         </div>
       </div>
 
-      <p className="d-label mt-6 text-center text-[10px] tracking-[0.2em] text-[#6f5c44] uppercase">
+      <p className="d-label mt-6 text-center text-[10px] tracking-[0.2em] text-[#9e8361] uppercase">
         {td('filmstrip.hint')}
       </p>
 

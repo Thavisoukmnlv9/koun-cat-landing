@@ -55,7 +55,19 @@ export function PolaroidPin({
           className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-[var(--d-charcoal)]/70 text-[11px] text-white"
         />
 
-        <span className="d-body absolute right-2 bottom-1.5 text-[10px] font-bold tracking-[0.12em] text-white/85 uppercase drop-shadow">
+        {/* The date is printed on the photograph, and a photograph is whatever
+            it happens to be — these are outdoor daylight frames, so a white sky
+            in the bottom corner left the caption at roughly 1.2:1 and nothing
+            but a hairline `drop-shadow` between it and disappearing. A short
+            gradient under the lower edge gives it a ground of its own that no
+            photograph can take away, and it only darkens the last fifth of the
+            frame, which is where a print's caption band sits anyway. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/5 bg-[linear-gradient(to_top,rgb(20_18_16/0.62),transparent)]"
+        />
+
+        <span className="d-body absolute right-2 bottom-1.5 text-[10px] font-bold tracking-[0.12em] text-white uppercase">
           {t(memory.keys.shortDate)}
         </span>
       </span>

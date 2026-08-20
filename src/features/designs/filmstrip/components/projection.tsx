@@ -105,7 +105,7 @@ export function Projection({
               {td('filmstrip.prev')}
             </button>
 
-            <span className="d-label text-[11px] tracking-[0.2em] text-[#8f7a5f]">
+            <span className="d-label text-[11px] tracking-[0.2em] text-[#9b8468]">
               {td('filmstrip.count', { current: String(index + 1), total: String(total) })}
             </span>
 

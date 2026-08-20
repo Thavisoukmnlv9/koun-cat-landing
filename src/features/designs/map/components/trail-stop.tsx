@@ -94,7 +94,7 @@ export function TrailStop({
             “{t(memory.keys.caption)}”
           </p>
 
-          <p className="d-label mt-3 text-[11px] tracking-[0.1em] text-[var(--d-gold)]">
+          <p className="d-label mt-3 text-[11px] tracking-[0.1em] text-[var(--d-gold-ink)]">
             <span aria-hidden>◆ </span>
             {td(memory.flavour.dist)}
           </p>
@@ -104,7 +104,14 @@ export function TrailStop({
             onClick={() => setOpen((was) => !was)}
             aria-expanded={open}
             aria-controls={detailId}
-            className="d-label mt-3 text-[11px] tracking-[0.16em] text-[var(--d-sky)] uppercase"
+            // The only control on a stop, and it was 17px tall — a line of
+            // 11px type with nothing around it. `min-h-11` gives it a thumb's
+            // worth of box without moving the words: the margin above comes
+            // down by the same amount the box grows.
+            // It is inline-flex rather than flex so that the parent's
+            // `text-right` still carries it to the correct edge on the stops
+            // that hang on the right.
+            className="d-label mt-1 inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] text-[var(--d-sky)] uppercase"
           >
             {td(open ? 'map.close' : 'map.open')}
           </button>

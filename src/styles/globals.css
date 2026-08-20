@@ -40,10 +40,26 @@
   --color-ink-caption: #4a4234; /* polaroid caption */
   --color-ink-faint: #6b6152; /* endpaper note, closing line */
 
-  /* ─── Labels — the typewriter voice: dates, kickers, plate numbers ────── */
-  --color-muted: #9c8a6e;
-  --color-muted-label: #96856b;
-  --color-muted-hint: #a9977a;
+  /* ─── Labels — the typewriter voice: dates, kickers, plate numbers ──────
+     These three were a sun-bleached #9c8a6e / #96856b / #a9977a, and they were
+     the one place the page put its aesthetic above its readability: Courier
+     Prime at 10-12px with 0.2em of tracking, printed at 2.3-2.9:1 on the
+     paper. That is not a quiet label, it is a label a fair number of people
+     cannot read at all — and the words set in it are dates, place names and
+     the tab bar, which is to say navigation and content rather than
+     decoration.
+
+     Each has been walked down in lightness with its hue and saturation held
+     exactly, to the first value that clears WCAG AA (4.5:1) on both the paper
+     and the envelope stock, which is the darkest ground any of them lands on.
+     They are still the lightest text on the page by a wide margin — the body
+     ink sits at 6.4:1 and the headings at 11.7:1 — so the hierarchy the
+     original values were reaching for survives; only the illegibility goes.
+     The ramp between them is preserved too: hint is the faintest, then muted,
+     then label, exactly as before. */
+  --color-muted: #73654e;
+  --color-muted-label: #726551;
+  --color-muted-hint: #74644b;
 
   /* ─── Accent — rationed, on purpose ─────────────────────────────────────
      Burnt red appears on exactly five things: "tap to read the back", the
@@ -58,8 +74,18 @@
      scroll, at 30% over the dashed rule. It is the only mark on the page that
      says "you are here", it is the accent's job to carry emphasis, and the
      dashed brown underneath it is the only other candidate — which would have
-     made a drawn thread indistinguishable from an undrawn one. */
-  --color-accent: #b4523f;
+     made a drawn thread indistinguishable from an undrawn one.
+
+     The red itself moved, by about seven percent of its lightness. #b4523f was
+     4.02:1 on the envelope stock and 4.05:1 on the paper, which is under AA for
+     small text — and almost everything on the list above *is* small text, set
+     in Courier at 10-11px. #a54b3a clears 4.5:1 on every ground the page has
+     while staying the same burnt red at the same hue: the seal, the cover and
+     the tape are visually unchanged, and the chips and the flip hint become
+     readable. Splitting it into a "text red" and a "material red" would have
+     been the other way out, and it is the wrong one — the rule this file opens
+     with is that there is exactly one red. */
+  --color-accent: #a54b3a;
   --color-accent-strong: #8f3c2c;
 
   /* ─── Materials ─────────────────────────────────────────────────────────
@@ -67,8 +93,11 @@
   --color-tape: #e4d6b7;
   --color-board: #d8c9a8;
   --color-board-deep: #c9b892;
-  /* The accent as a marker pen, for the words currently being read aloud. */
-  --color-highlight: rgb(180 82 63 / 0.16);
+  /* The accent as a marker pen, for the words currently being read aloud.
+     Written out in channels rather than as `--color-accent` because it needs an
+     alpha, so it has to be kept in step with the accent by hand — these are
+     #a54b3a's three numbers. */
+  --color-highlight: rgb(165 75 58 / 0.16);
   --color-envelope: #f0e6d2;
   --color-envelope-deep: #e4d7bc;
   --color-flap: #e8dbc1;
@@ -441,10 +470,32 @@
   }
 
   /* One visible focus treatment for every interactive element. The accent
-     carries emphasis everywhere else on the page, so it carries focus too. */
+     carries emphasis everywhere else on the page, so it carries focus too.
+
+     Two rings rather than one, and the second is not decoration.
+     `globals.css` was written for a page made of cream paper, where a burnt red
+     outline is the highest-contrast mark available. The site is now twelve
+     pages and five of them are dark — the film gate, the record deck, the
+     album's leather, the night sky, the storybook's black — and against the
+     darkest of those surfaces the accent measures 2.9:1, under the 3:1 that a
+     focus indicator owes. A keyboard reader would lose the ring on exactly the
+     designs where finding it matters most.
+
+     So: cream fills the 3px offset gap, the accent sits in the ring outside it.
+     On paper the cream ring is invisible against the page and the accent is the
+     indicator; on the deck and the gate the accent recedes and the cream is.
+     Whatever the ground, one of the two is always in contrast with it, and the
+     pairing is the same shape on every page.
+
+     A box-shadow is used for the inner ring because an element gets exactly one
+     `outline`. Tailwind's `shadow-*` utilities are a later layer and will win
+     where an element sets one — those elements simply keep the single accent
+     ring they have today, which is the behaviour this replaces rather than a
+     regression. */
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--color-paper-card);
   }
 }
 

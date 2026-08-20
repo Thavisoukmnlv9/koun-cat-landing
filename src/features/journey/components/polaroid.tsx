@@ -35,9 +35,15 @@ export function Polaroid() {
     >
       <WashiTape tape={HEADER_POLAROID.tape} />
       <div className="bg-paper-card shadow-polaroid px-3 pt-3 pb-11">
+        {/* `priority`, which is what the paragraph above is describing: this is
+            the one image on this page that is on screen before anyone has
+            scrolled, and `#journey` is a link people are meant to send. It was
+            being deferred like the ten postcards below it, so the first screen
+            of the finished page finished loading last. */}
         <Picture
           name={`journey/${HEADER_POLAROID.image}`}
           alt={t('header.polaroidAlt')}
+          priority
           className="aspect-photo bg-photo-bed w-full object-cover"
         />
         <p className="font-hand text-polaroid text-ink-caption mt-3">

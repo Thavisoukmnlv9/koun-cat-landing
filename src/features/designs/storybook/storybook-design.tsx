@@ -57,9 +57,15 @@ export function StorybookDesign() {
       </div>
 
       {/* ── Chapter dots ─────────────────────────────────────────────── */}
+      {/* Each dot's box is 44px square with a 9px mark drawn in the middle of
+          it, rather than a 24px box that *is* the mark. Six 24px targets four
+          pixels apart is a rail you miss; the marks themselves have not moved
+          or changed size, so the rail looks exactly as it did. The column sits
+          flush to the right edge now that it is 44px wide — inset by two, its
+          own width would have carried it over the prose. */}
       <nav
         aria-label={td('a11y.chapters')}
-        className="fixed top-1/2 right-2 z-50 flex -translate-y-1/2 flex-col gap-1"
+        className="fixed top-1/2 right-0 z-50 flex -translate-y-1/2 flex-col"
       >
         {memories.map((memory, i) => (
           <button
@@ -68,7 +74,7 @@ export function StorybookDesign() {
             onClick={() => goTo(i)}
             aria-label={td('a11y.goToChapter', { numeral: NUMERALS[i] })}
             aria-current={i === active || undefined}
-            className="grid size-6 place-items-center"
+            className="grid size-11 place-items-center"
           >
             <span
               aria-hidden

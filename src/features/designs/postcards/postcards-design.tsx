@@ -40,8 +40,11 @@ export function PostcardsDesign() {
       <div aria-hidden className="d-airmail mt-8 h-3.5 w-full" />
 
       <div className="mx-auto mt-10 flex max-w-[560px] flex-col gap-7 px-5">
-        {memories.map((memory) => (
-          <FlipPostcard key={memory.id} memory={memory} />
+        {memories.map((memory, index) => (
+          // The first card is the one on screen when the page opens, so it
+          // loads eagerly and the other five defer — the same split the
+          // filmstrip and the storybook already make.
+          <FlipPostcard key={memory.id} memory={memory} priority={index === 0} />
         ))}
       </div>
 

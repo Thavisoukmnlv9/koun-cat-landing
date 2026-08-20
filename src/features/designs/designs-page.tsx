@@ -146,15 +146,24 @@ export function DesignsPage() {
           The designs are not motionless as a result. Each brings its own
           entrance — the map's stops reveal on scroll, the filmstrip's frames
           settle, and the tab underline travels between tabs on a `layoutId`. */}
-      <main
-        key={active}
-        id={`design-panel-${active}`}
-        role="tabpanel"
-        aria-labelledby={`design-tab-${active}`}
-        tabIndex={-1}
-        data-design={active}
-      >
-        <Component />
+      {/* The panel is a child of <main> rather than <main> itself.
+          `role="tabpanel"` on a <main> is not an addition to it — an explicit
+          role replaces the implicit one, so the whole site had a banner
+          landmark and nothing else, and a screen-reader reader jumping by
+          landmark had no way to get past the tab bar to the page. Nesting the
+          two keeps both: <main> is the landmark, the div inside it is what the
+          tabs control and what takes focus. */}
+      <main>
+        <div
+          key={active}
+          id={`design-panel-${active}`}
+          role="tabpanel"
+          aria-labelledby={`design-tab-${active}`}
+          tabIndex={-1}
+          data-design={active}
+        >
+          <Component />
+        </div>
       </main>
 
       <span className="sr-only" aria-live="polite">

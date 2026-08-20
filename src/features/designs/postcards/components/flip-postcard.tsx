@@ -23,7 +23,7 @@ import { FILM_SRC, yearOf, type Memory } from '../../data/memories'
  * reason journey's postcard gives: a card-sized button swallows the audio
  * scrubber and the film's controls sitting inside it.
  */
-export function FlipPostcard({ memory }: { memory: Memory }) {
+export function FlipPostcard({ memory, priority = false }: { memory: Memory; priority?: boolean }) {
   const { t } = useTranslation()
   const { t: td } = useTranslation('designs')
   const [flipped, setFlipped] = useState(false)
@@ -52,6 +52,7 @@ export function FlipPostcard({ memory }: { memory: Memory }) {
               <Picture
                 name={`journey/${memory.image}`}
                 alt={place}
+                priority={priority}
                 className="size-full object-cover"
               />
             )}
@@ -95,7 +96,7 @@ export function FlipPostcard({ memory }: { memory: Memory }) {
               aria-controls={backId}
               aria-label={td('a11y.flipCard', { title: place })}
               onClick={() => setFlipped(true)}
-              className="d-hand mt-1 self-end text-[17px] text-[var(--d-red)]"
+              className="d-hand mt-1 inline-flex min-h-11 items-center self-end px-1 text-[17px] text-[var(--d-red)]"
             >
               {td('postcards.flipHint')}
             </button>
@@ -145,7 +146,7 @@ export function FlipPostcard({ memory }: { memory: Memory }) {
             <button
               type="button"
               onClick={() => setFlipped(false)}
-              className="d-hand mt-3 self-start text-[16px] text-[var(--d-red)]"
+              className="d-hand mt-1 inline-flex min-h-11 items-center self-start px-1 text-[16px] text-[var(--d-red)]"
             >
               {td('postcards.flipHint')}
             </button>

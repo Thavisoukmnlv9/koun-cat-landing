@@ -61,6 +61,16 @@ export interface Specimen {
   /** The four colour roles, lifted from the design's own scope class. */
   ground: string
   ink: string
+  /**
+   * The design's accent, as *ink*.
+   *
+   * The tile spends it on the numeral, the mark beside it and the "open →"
+   * line, all of which are text at 9-13px — so where a design keeps a separate
+   * readable companion for its metal (the map's and the wall's `--d-gold-ink`)
+   * this takes that one, not the metal itself. The metal still appears on the
+   * tile: it is one of the five stops in `swatch` below, which is a picture of
+   * a palette rather than something anyone has to read.
+   */
   accent: string
   muted: string
   /** Five stops, for the tile's swatch bar and the hero's continuous rule. */
@@ -97,9 +107,9 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     voice: 'display',
     ground: '#efe7d7',
     ink: '#2e2921',
-    accent: '#b4523f',
-    muted: '#9c8a6e',
-    swatch: ['#efe7d7', '#b4523f', '#5a5142', '#9c8a6e', '#2e2921'],
+    accent: '#a54b3a',
+    muted: '#73654e',
+    swatch: ['#efe7d7', '#a54b3a', '#5a5142', '#73654e', '#2e2921'],
     faces: ['EB Garamond', 'Caveat'],
   },
   filmstrip: {
@@ -111,7 +121,7 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     ground: '#17100c',
     ink: '#efe6d4',
     accent: '#c8a24b',
-    muted: '#8f7a5f',
+    muted: '#9b8468',
     swatch: ['#17100c', '#2c1c15', '#c8a24b', '#e8785a', '#efe6d4'],
     faces: ['Cormorant Garamond', 'Space Mono'],
   },
@@ -124,7 +134,7 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     ground: '#f4ece0',
     ink: '#2a2320',
     accent: '#b23a48',
-    muted: '#7d6d5e',
+    muted: '#776859',
     swatch: ['#f4ece0', '#b23a48', '#1d3b6e', '#b98a2e', '#2a2320'],
     faces: ['Fraunces', 'Karla'],
   },
@@ -136,9 +146,9 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     voice: 'display',
     ground: '#ece3cf',
     ink: '#33291b',
-    accent: '#a9852f',
-    muted: '#8a6d3b',
-    swatch: ['#ece3cf', '#8a6d3b', '#2f4a3c', '#a9852f', '#6a8caf'],
+    accent: '#7b6122',
+    muted: '#7a6134',
+    swatch: ['#ece3cf', '#7a6134', '#2f4a3c', '#9a792b', '#486787'],
     faces: ['Cinzel', 'Spectral'],
   },
   gallery: {
@@ -149,8 +159,8 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     voice: 'script',
     ground: '#efe7db',
     ink: '#33302b',
-    accent: '#b98a2e',
-    muted: '#7d766b',
+    accent: '#836221',
+    muted: '#6d665d',
     swatch: ['#efe7db', '#d9a7a0', '#9fb0a0', '#e6cf94', '#33302b'],
     faces: ['DM Serif Display', 'Sacramento'],
   },
@@ -162,9 +172,9 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     voice: 'script',
     ground: '#efd9dd',
     ink: '#583349',
-    accent: '#a5788a',
-    muted: '#8a6476',
-    swatch: ['#efd9dd', '#d8a3ad', '#a5788a', '#583349', '#c19a3f'],
+    accent: '#7f5566',
+    muted: '#795867',
+    swatch: ['#efd9dd', '#d8a3ad', '#7f5566', '#583349', '#c19a3f'],
     faces: ['Pinyon Script', 'EB Garamond'],
   },
   mixtape: {
@@ -227,9 +237,9 @@ export const SPECIMENS: Record<SpecimenId, Specimen> = {
     voice: 'display',
     ground: '#e7e2d8',
     ink: '#1c1a17',
-    accent: '#b08a3e',
-    muted: '#8a8478',
-    swatch: ['#e7e2d8', '#b08a3e', '#3a352c', '#2c2926', '#f6f2e9'],
+    accent: '#7a602b',
+    muted: '#68635a',
+    swatch: ['#e7e2d8', '#7a602b', '#3a352c', '#2c2926', '#f6f2e9'],
     faces: ['Cormorant Garamond', 'Jost'],
   },
 }

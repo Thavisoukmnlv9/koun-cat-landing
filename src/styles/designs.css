@@ -42,6 +42,37 @@
     display: none;
   }
 
+  /* The tab bar's edges, softened only where the bar actually continues.
+     `design-tabs.tsx` sets the two data attributes off the live scroll offset;
+     everything here is the drawing.
+
+     A mask rather than a gradient laid over the top, because the bar is
+     translucent (`bg-paper/85` with a blur behind it) and a painted fade would
+     have to know what colour the page underneath it is — which changes with
+     every design in the bar. A mask fades the tabs themselves and leaves the
+     bar's own material alone, so the same twelve pixels of ramp work over
+     cream, over espresso and over the constellation's midnight blue.
+
+     The ramp is 28px, which is a little more than one letter of Courier at
+     this size: enough to read as a fade rather than as a clipped glyph. */
+  .tabs-rail {
+    --fade-start: 0px;
+    --fade-end: 0px;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--fade-start),
+      black calc(100% - var(--fade-end)),
+      transparent 100%
+    );
+  }
+  .tabs-rail[data-overflow-start] {
+    --fade-start: 28px;
+  }
+  .tabs-rail[data-overflow-end] {
+    --fade-end: 28px;
+  }
+
   /* ══ 0 · HOME ═════════════════════════════════════════════════════════
      The specimen sheet. Not an eleventh design — the cover of the other
      eleven — so it borrows the site's own voices rather than introducing new
@@ -59,7 +90,7 @@
     --d-paper: #efe7d7;
     --d-ink: #5a5142;
     --d-ink-strong: #2e2921;
-    --d-muted: #9c8a6e;
+    --d-muted: #73654f;
     --d-accent: #a5813a;
     --d-rule: rgb(150 128 96 / 0.45);
 
@@ -220,12 +251,22 @@
   .d-map {
     --d-parch: #ece3cf;
     --d-parch-d: #e2d6bb;
-    --d-sepia: #8a6d3b;
+    --d-sepia: #7a6134;
     --d-forest: #2f4a3c;
     --d-forest-2: #3f5e4c;
-    --d-gold: #a9852f;
+    /* Two golds, because gold on cream cannot be one.
+       `--d-gold` is the metal: the trail drawn across the parchment, the pin at
+       its head, the compass ring, the progress bar. It was #a9852f, which is
+       2.7:1 on the parchment — under the 3:1 that a line carrying meaning owes
+       — so it has been taken down just far enough to clear it and no further,
+       because a gold walked all the way to AA stops being gold. `--d-gold-ink`
+       is that walk: the same hue at the lightness small text needs, for the one
+       label set in this colour. It reads as a deep antique bronze, which is
+       what any gold legible at 11px on cream reads as. */
+    --d-gold: #9a792b;
+    --d-gold-ink: #7b6122;
     --d-ink: #33291b;
-    --d-sky: #6a8caf;
+    --d-sky: #486787;
     --d-card: #fbf5e6;
 
     --d-display: 'Cinzel', 'Noto Sans', Georgia, serif;
@@ -257,7 +298,10 @@
     --d-blush: #d9a7a0;
     --d-sage: #9fb0a0;
     --d-butter: #e6cf94;
+    /* The same split the map makes, for the same reason: `--d-gold` rules the
+       dashed line under the title, `--d-gold-ink` sets the kicker over it. */
     --d-gold: #b98a2e;
+    --d-gold-ink: #836221;
     --d-charcoal: #33302b;
     --d-tape-mint: rgb(159 176 160 / 0.55);
     --d-tape-blush: rgb(217 167 160 / 0.5);
@@ -300,7 +344,7 @@
     --d-rose: #d8a3ad;
     --d-rose-d: #c78d99;
     --d-rose-l: #e6bcc4;
-    --d-mauve: #a5788a;
+    --d-mauve: #7f5566;
     --d-plum: #583349;
     --d-plum-soft: #6f4a5f;
     --d-cream: #faf3ea;
@@ -412,7 +456,7 @@
     --d-page-2: #efe6d3;
     --d-page-edge: #d9cdb2;
     --d-ink: #3a2f22;
-    --d-sepia: #8a6d43;
+    --d-sepia: #7b613c;
 
     --d-display: 'Cormorant Garamond', 'Noto Sans', Georgia, serif;
     --d-body: 'EB Garamond', 'Noto Sans', Georgia, serif;
@@ -622,10 +666,10 @@
     --d-wall-sh: #cfc7b5;
     --d-charcoal: #2c2926;
     --d-ink: #1c1a17;
-    --d-brass: #b08a3e;
+    --d-brass: #7a602b;
     --d-brass-l: #d8b46a;
     --d-placard: #f6f2e9;
-    --d-muted: #8a8478;
+    --d-muted: #68635a;
     --d-frame: #3a352c;
     --d-frame-l: #5a5344;
 
